@@ -1,12 +1,16 @@
-from voice import listener, speaker
+import voice
+
+speak = voice.speak
+listen = voice.listen
+
 
 def main():
-    text = listener.listen()
+    speak("Welcome to your personal python assistant.")
+    text = listen()
     if text:
-        speaker.speak(f"You said {text}")
-        speaker.speak("This is a text test im interested if you can say it all")
+        speak(f"You said {text}")
     else:
-        speaker.speak("Sorry, I don't understand.")
+        speak("Sorry, I don't understand.")
 
 if __name__ == "__main__":
     main()

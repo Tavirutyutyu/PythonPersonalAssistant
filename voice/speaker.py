@@ -1,9 +1,7 @@
-import pyttsx3
-
-engine = pyttsx3.init()
-engine.setProperty("rate", 150)
+import subprocess
 
 def speak(text):
-    print(f"Assistant says: {text}")
-    engine.say(text)
-    engine.runAndWait()
+    try:
+        subprocess.run(['festival', '--tts'], input=text, text=True, check=True)
+    except subprocess.CalledProcessError as e:
+        print(f"Error in speech synthesis: {e}")
