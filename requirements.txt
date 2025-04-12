@@ -1,0 +1,8 @@
+audioop-lts==0.2.1
+PyAudio==0.2.14
+pyttsx3==2.98
+setuptools==78.1.0
+SpeechRecognition==3.8.1
+standard-aifc==3.13.0
+standard-chunk==3.13.0
+typing_extensions==4.13.2
