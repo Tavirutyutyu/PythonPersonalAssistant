@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
 class Command(ABC):
-    def __init__(self, keywords:list[str], sub_options:dict[str, str] or None) -> None:
+    def __init__(self, keywords:list[str], sub_options:dict[str, str] = None) -> None:
         """
         You need to provide keywords and if needed than sub options.
         For example keywords: open browser, browse, firefox...
@@ -13,7 +13,7 @@ class Command(ABC):
         @type sub_options: dict[str, str]
         """
         self.__keywords = keywords
-        self.__sub_options = sub_options
+        self.__sub_options = sub_options if sub_options else {}
 
     def matches(self, text: str) -> bool:
         """Check if this command should handle the given input"""

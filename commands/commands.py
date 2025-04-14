@@ -5,7 +5,7 @@ from commands.command_base import Command
 
 class HelloCommand(Command):
     def __init__(self) -> None:
-        super().__init__(["hi", "hello", "hey"], None)
+        super().__init__(["hi", "hello", "hey"])
 
     def execute(self, name: str) -> str:
         return f"Hello {name}! How can i help you?"
