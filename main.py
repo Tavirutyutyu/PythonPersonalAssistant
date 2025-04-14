@@ -1,5 +1,4 @@
 from commands import CommandManager
-from commands.command_base import Command
 from voice import VoiceAssistant
 
 assistant = VoiceAssistant()
@@ -14,7 +13,7 @@ def main():
     else:
         assistant.speak("Sorry, I don't understand.")
 
-def test_commands(command: Command, input_text: str, execute_command_text: str):
+def test_commands(command, input_text: str, execute_command_text: str):
     if command.matches(input_text):
         print(command.execute(execute_command_text))
 
