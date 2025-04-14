@@ -1,30 +1,6 @@
 import subprocess
-
-from commands.command_base import Command
 import webbrowser
-
-
-class CommandManager:
-    def __init__(self):
-        self.commands = self.initialise_commands()
-
-    @staticmethod
-    def initialise_commands():
-        all_commands = [HelloCommand(), BrowserCommand(), LaunchIDECommand()]
-        return all_commands
-
-    def match(self, match_text:str) -> Command or None:
-        for command in self.commands:
-            if command.matches(match_text):
-                return command
-
-
-    def match_and_execute(self, match_text: str, execute_text: str):
-        command = self.match(match_text)
-        if command:
-            command.execute(execute_text)
-        else:
-            print("Command not found")
+from commands.command_base import Command
 
 
 class HelloCommand(Command):
@@ -52,7 +28,8 @@ class BrowserCommand(Command):
 
 class LaunchIDECommand(Command):
     def __init__(self) -> None:
-        super().__init__("launch pycharm", "start pycharm", "open pycharm", "launch intellij", "start intellij", "open intellij")
+        super().__init__("launch pycharm", "start pycharm", "open pycharm", "launch intellij", "start intellij",
+                         "open intellij")
         self.sub_options = {
             "pycharm": "pycharm",
             "intellij": "idea",
@@ -69,5 +46,3 @@ class LaunchIDECommand(Command):
             print(f"IDE not found: {e}")
         except Exception as e:
             print(f"Unknown error: {e}")
-
-

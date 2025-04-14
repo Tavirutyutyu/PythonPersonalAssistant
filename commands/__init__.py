@@ -1,1 +1,1 @@
-from commands.commands import CommandManager
+from commands.command_manager import CommandManager

@@ -1,7 +1,6 @@
-from commands.command_base import Command
-from commands.commands import LaunchIDECommand
-from voice import VoiceAssistant
 from commands import CommandManager
+from commands.command_base import Command
+from voice import VoiceAssistant
 
 assistant = VoiceAssistant()
 command_manager = CommandManager()
@@ -28,7 +27,7 @@ def test_command_by_voice():
         if command:
             assistant.speak(f"You choose {command.__class__.__name__}")
             assistant.speak("Choose an option:")
-            options = command.keywords
+            options = command.get_sub_options()
             for option in options:
                 assistant.speak(option)
             voice_option_input = assistant.listen()
