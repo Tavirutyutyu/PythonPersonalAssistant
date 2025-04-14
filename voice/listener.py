@@ -1,34 +1,33 @@
 import speech_recognition as sr
+from speech_recognition import WaitTimeoutError, UnknownValueError, RequestError
+
+from voice.text_to_speech_base import TextToSpeechBase
 
 
-def listen():
-    recognizer = sr.Recognizer()
-    mic = sr.Microphone()
+class Listener:
+    def __init__(self):
+        self.__recognizer = sr.Recognizer()
+        self.__microphone = sr.Microphone()
 
-    with mic as source:
-        print("🎙 Adjusting for ambient noise... Please be quiet for a moment.")
-        recognizer.adjust_for_ambient_noise(source, duration=2)
-        print(f"📝 Ambient noise level: {recognizer.energy_threshold}")
-
-        print("🎙 Listening... Speak now.")
-        try:
-            audio = recognizer.listen(source, timeout=20, phrase_time_limit=10)  # Adjust timeout as needed
-            if audio.frame_data:
-                print("🔊 Audio detected.")
-                text = recognizer.recognize_google(audio, language="en-US")
-                print(f"🧠 You said: {text}")
-                return text
-            else:
-                print("❌ No audio captured.")
+    def listen(self, speaker:TextToSpeechBase, noise_adjusting_time:int=2, listen_timeout:int=20, phrase_time_limit:int=10, language:str='en-US') -> str or None:
+        with self.__microphone as source:
+            self.__recognizer.adjust_for_ambient_noise(source, duration=noise_adjusting_time)
+            try:
+                audio = self.__recognizer.listen(source, timeout=listen_timeout, phrase_time_limit=phrase_time_limit)
+                if audio.frame_data:
+                    print("Audio detected")
+                    return self.__recognizer.recognize_google(audio, language=language)
+                else:
+                    return None
+            except WaitTimeoutError:
+                print("⏸ Timeout: No speech detected. Stopping...")
+                speaker.speak("Timeout. No speech detected. Stopping...")
                 return None
-
-        except sr.WaitTimeoutError:
-            print("⏸ Timeout: No speech detected. Stopping...")
-            return None
-        except sr.UnknownValueError:
-            print("🤷 I couldn’t understand what you said.")
-            return None
-        except sr.RequestError as e:
-            print(f"❌ Google API error: {e}")
-            return None
-
+            except UnknownValueError:
+                print("🤷 I couldn’t understand what you said.")
+                speaker.speak("I couldn't understand what you said.")
+                return None
+            except RequestError as e:
+                print(f"❌ Google API error: {e}")
+                speaker.speak("Google API error. Please try again later.")
+                return None

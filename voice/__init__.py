@@ -1,3 +1,2 @@
-from voice.listener import listen
-from voice.speaker import speak
+from voice.voice_assistant import VoiceAssistant
 

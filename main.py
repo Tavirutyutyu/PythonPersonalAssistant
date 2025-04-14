@@ -1,16 +1,15 @@
-import voice
+from voice import VoiceAssistant
 
-speak = voice.speak
-listen = voice.listen
-
+assistant = VoiceAssistant()
 
 def main():
-    speak("Welcome to your personal python assistant.")
-    text = listen()
+    assistant.speak("Welcome to your personal python assistant.")
+    text = assistant.listen()
     if text:
-        speak(f"You said {text}")
+        assistant.speak(f"You said {text}")
     else:
-        speak("Sorry, I don't understand.")
+        assistant.speak("Sorry, I don't understand.")
+
 
 if __name__ == "__main__":
     main()
