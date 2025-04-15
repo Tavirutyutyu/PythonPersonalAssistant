@@ -24,5 +24,8 @@ class Command(ABC):
         """Perform the command's action and return response text"""
         pass
 
-    def get_sub_options(self) -> list:
+    def get_sub_options(self) -> list[str]:
         return list(self.__sub_options.keys())
+
+    def get_keywords(self) -> list[str]:
+        return list(self.__keywords)

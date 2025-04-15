@@ -24,3 +24,9 @@ class CommandManager:
         else:
             print("Command not found")
 
+    def get_possible_keywords(self):
+        keywords = []
+        for command in self.__commands:
+            keywords.append(command.get_keywords())
+
+

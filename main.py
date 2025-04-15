@@ -5,13 +5,7 @@ assistant = VoiceAssistant()
 command_manager = CommandManager()
 
 def main():
-    assistant.speak("Welcome to your personal python assistant.")
-    text = assistant.listen()
-    if text:
-        print(text)
-        assistant.speak(f"You said {text}")
-    else:
-        assistant.speak("Sorry, I don't understand.")
+    pass
 
 def test_commands(command, input_text: str, execute_command_text: str):
     if command.matches(input_text):
@@ -19,14 +13,18 @@ def test_commands(command, input_text: str, execute_command_text: str):
 
 def test_command_by_voice():
     assistant.speak("What would you like to do? Browse on the internet or launch an IDE?")
+    possible_keywords = command_manager.get_possible_keywords()
+    print(f"Possible keywords: {possible_keywords}")
     voice_input = assistant.listen()
     if voice_input:
         assistant.speak(f"You said {voice_input}")
         command = command_manager.match(voice_input)
         if command:
             assistant.speak(f"You choose {command.__class__.__name__}")
+            print(f"You choose {command.__class__.__name__}")
             assistant.speak("Choose an option:")
             options = command.get_sub_options()
+            print(f"Sub options: {options}")
             for option in options:
                 assistant.speak(option)
             voice_option_input = assistant.listen()

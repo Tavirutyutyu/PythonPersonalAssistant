@@ -5,19 +5,26 @@ from voice.text_to_speech_base import TextToSpeechBase
 
 
 class Listener:
-    def __init__(self):
+    def __init__(self, noise_adjusting_time: int = 2, listen_timeout: int = 5, phrase_time_limit: int = 10, language: str = "en-US") -> None:
         self.__recognizer = sr.Recognizer()
         self.__microphone = sr.Microphone()
+        self.__noise_adjusting_time = noise_adjusting_time
+        self.__listen_timeout = listen_timeout
+        self.__phrase_time_limit = phrase_time_limit
+        self.__language = language
 
-    def listen(self, speaker:TextToSpeechBase, noise_adjusting_time:int=2, listen_timeout:int=20, phrase_time_limit:int=10, language:str='en-US') -> str or None:
+    def listen(self, speaker: TextToSpeechBase) -> str or None:
         with self.__microphone as source:
-            self.__recognizer.adjust_for_ambient_noise(source, duration=noise_adjusting_time)
+            print("Adjusting to ambient noise")
+            self.__recognizer.adjust_for_ambient_noise(source, duration=self.__noise_adjusting_time)
             try:
-                audio = self.__recognizer.listen(source, timeout=listen_timeout, phrase_time_limit=phrase_time_limit)
+                print("Listening...")
+                audio = self.__recognizer.listen(source, timeout=self.__listen_timeout, phrase_time_limit=self.__phrase_time_limit)
                 if audio.frame_data:
                     print("Audio detected")
-                    return self.__recognizer.recognize_google(audio, language=language)
+                    return self.__recognizer.recognize_google(audio, language=self.__language)
                 else:
+                    print("No audio detected")
                     return None
             except WaitTimeoutError:
                 print("⏸ Timeout: No speech detected. Stopping...")
