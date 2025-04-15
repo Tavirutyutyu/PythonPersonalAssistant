@@ -1,0 +1,14 @@
+{
+  "keywords": [
+    "browser",
+    "firefox",
+    "browse",
+    "browse on the internet"
+  ],
+  "sub_options": {
+    "google": "https://www.google.com",
+    "youtube": "https://www.youtube.com",
+    "github": "https://www.github.com",
+    "default": "https://www.duckduckgo.com"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "keywords": [
+    "launch pycharm",
+    "start pycharm",
+    "open pycharm",
+    "launch intellij",
+    "start intellij",
+    "open intellij"
+  ],
+  "sub_options": {
+    "pycharm": "pycharm",
+    "intellij": "idea",
+    "neovim": "nvim",
+    "default": "nvim"
+  }
+}
