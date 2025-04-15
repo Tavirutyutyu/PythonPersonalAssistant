@@ -13,7 +13,7 @@ class Command(ABC):
         @type sub_options: dict[str, str]
         """
         self.__keywords = keywords
-        self.__sub_options = sub_options if sub_options else {}
+        self.__sub_options = sub_options
 
     def matches(self, text: str) -> bool:
         """Check if this command should handle the given input"""
@@ -24,7 +24,10 @@ class Command(ABC):
         """Perform the command's action and return response text"""
         pass
 
-    def get_sub_options(self) -> list[str]:
+    def get_sub_options(self) -> dict[str, str]:
+        return self.__sub_options
+
+    def get_sub_option_keys(self) -> list[str]:
         return list(self.__sub_options.keys())
 
     def get_keywords(self) -> list[str]:

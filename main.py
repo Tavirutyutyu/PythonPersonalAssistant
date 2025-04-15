@@ -23,7 +23,7 @@ def test_command_by_voice():
             assistant.speak(f"You choose {command.__class__.__name__}")
             print(f"You choose {command.__class__.__name__}")
             assistant.speak("Choose an option:")
-            options = command.get_sub_options()
+            options = command.get_sub_option_keys()
             print(f"Sub options: {options}")
             for option in options:
                 assistant.speak(option)
@@ -34,5 +34,5 @@ def test_command_by_voice():
 
 if __name__ == "__main__":
     #main()
-    test_command_by_voice()
-    #test_commands(command_manager.match("open intellij"), "open intellij", "intellij")
+    #test_command_by_voice()
+    test_commands(command_manager.match("open intellij"), "open intellij", "intellij")
