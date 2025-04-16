@@ -7,11 +7,13 @@
     "start intellij",
     "open intellij",
     "open code editor",
-    "let's code"
+    "let's code",
+    "code",
+    "write code"
   ],
   "sub_options": {
-    "pycharm": "pycharm",
-    "intellij": "idea",
+    "python": "pycharm",
+    "java": "idea",
     "default": "pycharm"
   }
 }
