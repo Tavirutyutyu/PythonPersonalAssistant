@@ -24,7 +24,7 @@ class Assistant:
             print(f"You said: {voice_input}")
             command = self.command_manager.match(voice_input)
             if command:
-                self.voice_assistant.speak(f"You choose {command.__class__.__name__}")
+                self.voice_assistant.speak(f"You choose {command}")
                 self.voice_assistant.speak("Choose an option:")
                 options = command.get_sub_option_keys()
                 for option in options:

@@ -6,15 +6,16 @@ from commands.command_base import Command
 
 class HelloCommand(Command):
     def __init__(self):
-        super().__init__(file_name="hello_command.json")
+        super().__init__(name="hello command", file_name="hello_command.json")
 
     def execute(self, name: str) -> str:
         return f"Hello {name}! How can i help you?"
 
 
+
 class BrowserCommand(Command):
     def __init__(self):
-        super().__init__("browser_command.json")
+        super().__init__(name="browser command", file_name="browser_command.json")
 
     def execute(self, text: str):
         sub_options = self.get_sub_options()
@@ -24,7 +25,7 @@ class BrowserCommand(Command):
 
 class LaunchIDECommand(Command):
     def __init__(self):
-        super().__init__("launch_ide_command.json")
+        super().__init__(name="code editor command", file_name="launch_ide_command.json")
 
     def execute(self, text: str):
         text = text.lower()
