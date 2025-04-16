@@ -5,7 +5,7 @@ from utils import JsonLoader
 
 
 class Command(ABC):
-    def __init__(self, name:str, file_name: str, directory_path: str = RESOURCES_DIR) -> None:
+    def __init__(self, name: str, file_name: str, directory_path: str = RESOURCES_DIR) -> None:
         """
         You need to provide a file that contains the command's keywords and if needed than sub options.
         For example keywords: open browser, browse, firefox...
@@ -21,13 +21,14 @@ class Command(ABC):
         self._name = name
         self.__keywords = command_metadata["keywords"]
         self.__sub_options = command_metadata["sub_options"] if "sub_options" in command_metadata else None
+        self.has_sub_options = True if self.__sub_options else False
 
     def matches(self, text: str) -> bool:
         """Check if this command should handle the given input"""
         return any(word in text.lower() for word in self.__keywords)
 
     @abstractmethod
-    def execute(self, text: str):
+    def execute(self, text: str | None = None):
         """Perform the command's action and return response text"""
         pass
 
@@ -42,5 +43,3 @@ class Command(ABC):
 
     def __str__(self):
         return self._name
-
-

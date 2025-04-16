@@ -1,5 +1,5 @@
 from commands.command_base import Command
-from commands.commands import HelloCommand, BrowserCommand, LaunchIDECommand
+from commands.commands import HelloCommand, BrowserCommand, LaunchIDECommand, ExitCommand
 
 
 class CommandManager:
@@ -8,7 +8,7 @@ class CommandManager:
 
     @staticmethod
     def initialise_commands():
-        all_commands = [HelloCommand(), BrowserCommand(), LaunchIDECommand()]
+        all_commands = [HelloCommand(), BrowserCommand(), LaunchIDECommand(), ExitCommand()]
         return all_commands
 
     def match(self, match_text:str) -> Command or None:

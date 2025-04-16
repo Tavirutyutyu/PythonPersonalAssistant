@@ -1,5 +1,4 @@
 from assistant import Assistant
-from commands.commands import HelloCommand
 
 
 def main():
