@@ -1,14 +1,12 @@
 import subprocess
 import webbrowser
+
 from commands.command_base import Command
-import utils
-from config import RESOURCES_DIR
 
 
 class HelloCommand(Command):
     def __init__(self):
-        command_metadata = utils.load("hello_command.json", RESOURCES_DIR)
-        super().__init__(command_metadata["keywords"])
+        super().__init__(file_name="hello_command.json")
 
     def execute(self, name: str) -> str:
         return f"Hello {name}! How can i help you?"
@@ -16,8 +14,7 @@ class HelloCommand(Command):
 
 class BrowserCommand(Command):
     def __init__(self):
-        command_metadata = utils.load("browser_command.json", RESOURCES_DIR)
-        super().__init__(keywords=command_metadata["keywords"], sub_options=command_metadata["sub_options"])
+        super().__init__("browser_command.json")
 
     def execute(self, text: str):
         sub_options = self.get_sub_options()
@@ -27,8 +24,7 @@ class BrowserCommand(Command):
 
 class LaunchIDECommand(Command):
     def __init__(self):
-        command_metadata = utils.load("launch_ide_command.json", RESOURCES_DIR)
-        super().__init__(keywords=command_metadata["keywords"], sub_options=command_metadata["sub_options"])
+        super().__init__("launch_ide_command.json")
 
     def execute(self, text: str):
         text = text.lower()
