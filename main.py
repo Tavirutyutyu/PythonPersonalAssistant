@@ -1,8 +1,10 @@
+from assistant.ollama_handler import OllamaHandler
 from commands import CommandManager
 from voice import VoiceAssistant
 
 assistant = VoiceAssistant()
 command_manager = CommandManager()
+ai_handler = OllamaHandler()
 
 def main():
     pass
@@ -30,9 +32,13 @@ def test_command_by_voice():
             if voice_option_input:
                 command.execute(voice_option_input)
 
+def test_ai_handler(prompt:str):
+    response = ai_handler.generate_response(prompt)
+    print(response)
 
 if __name__ == "__main__":
     #main()
     #test_command_by_voice()
-    executable = command_manager.match("browse")
-    test_commands(executable,  "journey")
+    # executable = command_manager.match("browse")
+    # test_commands(executable,  "journey")
+    test_ai_handler("What is dependency injection?")

@@ -24,16 +24,14 @@ class VoiceAssistant:
         self.__tts_engine.set_property('rate', rate)
         self.__tts_engine.set_property('volume', volume)
 
-    def listen(self, adjust_duration:int=2, listen_timeout:int=20, phrase_time_limit:int=10) -> str or None:
+    def listen(self) -> str or None:
         """
         Listens for speach with the microphone.
         Returns the recognised text or returns None and speaks the problem.
-        :param adjust_duration:
-        :param listen_timeout:
-        :param phrase_time_limit:
+
         :return text -> The recognized text or returns None:
         """
-        return self.listener.listen(self.__tts_engine, adjust_duration, listen_timeout, phrase_time_limit, self.language)
+        return self.listener.listen(self.__tts_engine)
 
     def speak(self, text:str) -> None:
         """
