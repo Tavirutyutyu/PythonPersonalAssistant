@@ -1,5 +1,5 @@
 from assistant.ai_handler.ai_handler import AIHandler
-from config import OLLAMA_MODEL, OLLAMA_URL
+from config import OLLAMA_MODEL, OLLAMA_URL, SYSTEM_PROMPT_VOICE, SYSTEM_PROMPT_CODE
 
 import requests
 
@@ -26,9 +26,13 @@ class OllamaHandler(AIHandler):
             return f"Error: {response.status_code} - {response.text}"
 
     @staticmethod
-    def _format_prompt(messages: list[dict]) -> str:
+    def _format_prompt(messages: list[dict], mode:str="voice") -> str:
         """Turn message history into a plain text prompt Ollama understands."""
         prompt = ""
+        if mode == "voice":
+            prompt = f"System: {SYSTEM_PROMPT_VOICE}\n"
+        elif mode == "code":
+            prompt = f"System: {SYSTEM_PROMPT_CODE}\n"
         for message in messages:
             role = message["role"]
             content = message["content"]

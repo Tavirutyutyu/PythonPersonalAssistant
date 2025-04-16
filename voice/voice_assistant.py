@@ -1,4 +1,6 @@
 from speech_recognition import Recognizer, Microphone
+
+from config import TTS_VOICE_SPEED, TTS_VOICE_VOLUME
 from voice.listener import Listener
 from voice.speaker import FestivalTTS
 
@@ -13,7 +15,7 @@ class VoiceAssistant:
         self.listener = Listener()
         self.set_voice_properties()
 
-    def set_voice_properties(self, rate:int=150, volume:float=1.0) -> None:
+    def set_voice_properties(self, rate:int=TTS_VOICE_SPEED, volume:float=TTS_VOICE_VOLUME) -> None:
         """
         Sets the speach rate and volume.
         @:param rate: Speech rate.
