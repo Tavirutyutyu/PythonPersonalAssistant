@@ -1,19 +1,25 @@
 from abc import ABC, abstractmethod
 
+from config import RESOURCES_DIR
+from utils import JsonLoader
+
+
 class Command(ABC):
-    def __init__(self, keywords:list[str], sub_options:dict[str, str] = None) -> None:
+    def __init__(self, file_name: str, directory_path: str = RESOURCES_DIR) -> None:
         """
-        You need to provide keywords and if needed than sub options.
+        You need to provide a file that contains the command's keywords and if needed than sub options.
         For example keywords: open browser, browse, firefox...
         Sub options: Google, YouTube, GitHub...
 
-        :param keywords: These keywords trigger the command.
-        @type keywords: list[str]
-        :param sub_options: These are the sub options of this command.
-        @type sub_options: dict[str, str]
+        :param file_name: The name of the file containing the command's keywords and sub options.
+        @type keywords: str
+        :param directory_path: The directory where the file is located.
+        @type sub_options: str
         """
-        self.__keywords = keywords
-        self.__sub_options = sub_options
+        file_loader = JsonLoader(directory=directory_path)
+        command_metadata = file_loader.load(file_name)
+        self.__keywords = command_metadata["keywords"]
+        self.__sub_options = command_metadata["sub_options"] if "sub_options" in command_metadata else None
 
     def matches(self, text: str) -> bool:
         """Check if this command should handle the given input"""
