@@ -7,7 +7,6 @@ from voice import VoiceAssistant
 class Assistant:
     def __init__(self):
         self.local_ai_manager: LocalAIManager = OllamaManager()
-        self.local_ai_manager.start_server()
 
         self.ai_handler:AIHandler = OllamaHandler()
         self.command_manager = CommandManager()
@@ -15,6 +14,7 @@ class Assistant:
 
     def greeting(self):
         self.voice_assistant.speak("Welcome to your personal assistant.")
+        self.local_ai_manager.start_server()
 
     def listen(self):
         voice_input = self.voice_assistant.listen()
@@ -27,7 +27,8 @@ class Assistant:
                 options = command.get_sub_option_keys()
                 for option in options:
                     self.voice_assistant.speak(option)
-                voice_option_input = self.voice_assistant.listen().lower()
+                voice_option_input = self.voice_assistant.listen()
+                voice_option_input = voice_option_input.lower() if voice_option_input else None
 
                 if voice_option_input and voice_option_input in options:
                     command.execute(voice_option_input)
@@ -37,10 +38,11 @@ class Assistant:
                 elif not voice_option_input:
                     self.voice_assistant.speak("Could not hear you.")
             else:
-                self.voice_assistant.speak("Generating answer with ai.")
+                self.voice_assistant.speak("Generating answer with AI.")
                 ai_answer = self.ai_handler.generate_response(voice_input)
                 self.voice_assistant.speak(ai_answer)
 
     def shutdown(self):
         self.voice_assistant.speak("Shutting down the assistant.")
+        self.voice_assistant.speak("Good bye!")
         self.local_ai_manager.stop_server()
