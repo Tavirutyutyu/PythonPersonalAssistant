@@ -1,5 +1,5 @@
-from ai_handler import AIHandler, OllamaHandler
-from ai_manager import LocalAIManager, OllamaManager
+from assistant.ai_handler import AIHandler, OllamaHandler
+from assistant.ai_manager import LocalAIManager, OllamaManager
 from commands import CommandManager
 from voice import VoiceAssistant
 
