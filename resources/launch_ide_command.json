@@ -5,12 +5,13 @@
     "open pycharm",
     "launch intellij",
     "start intellij",
-    "open intellij"
+    "open intellij",
+    "open code editor",
+    "let's code"
   ],
   "sub_options": {
     "pycharm": "pycharm",
     "intellij": "idea",
-    "neovim": "nvim",
-    "default": "nvim"
+    "default": "pycharm"
   }
 }
