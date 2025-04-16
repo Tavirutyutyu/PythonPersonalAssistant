@@ -1,4 +1,4 @@
-from assistant.ai_handler import AIHandler
+from assistant.ai_handler.ai_handler import AIHandler
 from config import OLLAMA_MODEL, OLLAMA_URL
 
 import requests

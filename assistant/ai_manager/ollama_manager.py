@@ -3,7 +3,7 @@ from os import setsid, killpg, getpgid
 from signal import SIGTERM
 from subprocess import Popen, DEVNULL
 
-from assistant.local_ai_manager import LocalAIManager
+from assistant.ai_manager.local_ai_manager import LocalAIManager
 
 
 class OllamaManager(LocalAIManager):
