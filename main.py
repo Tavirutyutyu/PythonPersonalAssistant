@@ -7,9 +7,8 @@ command_manager = CommandManager()
 def main():
     pass
 
-def test_commands(command, input_text: str, execute_command_text: str):
-    if command.matches(input_text):
-        print(command.execute(execute_command_text))
+def test_commands(command, execute_command_text: str):
+    print(command.execute(execute_command_text))
 
 def test_command_by_voice():
     assistant.speak("What would you like to do? Browse on the internet or launch an IDE?")
@@ -35,4 +34,5 @@ def test_command_by_voice():
 if __name__ == "__main__":
     #main()
     #test_command_by_voice()
-    test_commands(command_manager.match("open intellij"), "open intellij", "intellij")
+    executable = command_manager.match("browse")
+    test_commands(executable,  "journey")

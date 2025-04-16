@@ -25,7 +25,7 @@ class Command(ABC):
         pass
 
     def get_sub_options(self) -> dict[str, str]:
-        return self.__sub_options
+        return dict(self.__sub_options)
 
     def get_sub_option_keys(self) -> list[str]:
         return list(self.__sub_options.keys())

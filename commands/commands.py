@@ -39,4 +39,4 @@ class LaunchIDECommand(Command):
         except FileNotFoundError as e:
             print(f"IDE not found: {e}")
         except Exception as e:
-            print(f"Unknown error: {e}")
+            print(f"{e.__class__.__name__} error: {e}")

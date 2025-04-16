@@ -9,6 +9,8 @@
     "google": "https://www.google.com",
     "youtube": "https://www.youtube.com",
     "github": "https://www.github.com",
-    "default": "https://www.duckduckgo.com"
+    "default": "https://www.duckduckgo.com",
+    "on_the_job": "https://onthejob.code.cool",
+    "journey": "https://journey.study/v2/learn"
   }
 }
