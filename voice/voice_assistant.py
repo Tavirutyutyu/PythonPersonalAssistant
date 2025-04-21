@@ -1,17 +1,13 @@
-from speech_recognition import Recognizer, Microphone
-
 from config import TTS_VOICE_SPEED, TTS_VOICE_VOLUME
 from voice.listener import Listener
 from voice.speaker import FestivalTTS
+from voice.text_to_speech_base import TextToSpeechBase
 
 
 class VoiceAssistant:
     def __init__(self, language="en-US"):
-        self.__recognizer = Recognizer()
-        self.__microphone = Microphone()
         self.language = language
-
-        self.__tts_engine = FestivalTTS()
+        self.__tts_engine: TextToSpeechBase = FestivalTTS()
         self.listener = Listener()
         self.set_voice_properties()
 
