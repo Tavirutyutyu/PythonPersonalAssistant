@@ -5,7 +5,7 @@ from voice.text_to_speech_base import TextToSpeechBase
 
 
 class Listener:
-    def __init__(self, noise_adjusting_time: int = 2, listen_timeout: int = 5, phrase_time_limit: int = 10, language: str = "en-US") -> None:
+    def __init__(self, noise_adjusting_time: int = 2, listen_timeout: int = 5, phrase_time_limit: int | None = None, language: str = "en-US") -> None:
         self.__recognizer = sr.Recognizer()
         self.__microphone = sr.Microphone()
         self.__noise_adjusting_time = noise_adjusting_time

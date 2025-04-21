@@ -3,15 +3,14 @@ import sys
 from assistant.ai_handler import AIHandler, OllamaHandler
 from assistant.ai_manager import LocalAIManager, OllamaManager
 from commands import CommandManager
-from commands.command_base import Command
+from commands import Command
 from voice import VoiceAssistant
 
 
 class Assistant:
     def __init__(self):
         self.local_ai_manager: LocalAIManager = OllamaManager()
-
-        self.ai_handler:AIHandler = OllamaHandler()
+        self.ai_handler: AIHandler = OllamaHandler()
         self.command_manager = CommandManager()
         self.voice_assistant = VoiceAssistant()
 

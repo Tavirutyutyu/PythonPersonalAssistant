@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 
 from config import RESOURCES_DIR
 from utils import JsonLoader
+from utils.file_loader import FileLoader
 
 
 class Command(ABC):
@@ -16,12 +17,12 @@ class Command(ABC):
         :param directory_path: The directory where the file is located.
         @type sub_options: str
         """
-        file_loader = JsonLoader(directory=directory_path)
+        file_loader: FileLoader = JsonLoader(directory=directory_path)
         command_metadata = file_loader.load(file_name)
-        self._name = name
-        self.__keywords = command_metadata["keywords"]
-        self.__sub_options = command_metadata["sub_options"] if "sub_options" in command_metadata else None
-        self.has_sub_options = True if self.__sub_options else False
+        self._name: str = name
+        self.__keywords: list[str] = command_metadata["keywords"]
+        self.__sub_options: dict[str, str] | None = command_metadata["sub_options"] if "sub_options" in command_metadata else None
+        self.has_sub_options: bool = True if self.__sub_options else False
 
     def matches(self, text: str) -> bool:
         """Check if this command should handle the given input"""
