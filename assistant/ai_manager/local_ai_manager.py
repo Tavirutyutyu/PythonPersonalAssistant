@@ -7,16 +7,16 @@ class LocalAIManager(ABC):
         self._process: subprocess.Popen | None = None
 
     @abstractmethod
-    def __check_install(self):
+    def _check_install(self):
         pass
 
     @abstractmethod
-    def __install(self):
+    def _install(self):
         pass
 
     def start_server(self):
-        if not self.__check_install():
-            self.__install()
+        if not self._check_install():
+            self._install()
         self._start_server()
 
     @abstractmethod

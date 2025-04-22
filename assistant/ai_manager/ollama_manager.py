@@ -14,19 +14,10 @@ class OllamaManager(LocalAIManager):
     def __init__(self):
         super().__init__()
 
-    def __check_install(self):
-        if shutil.which("ollama") is None:
-            return False
-        try:
-            result = subprocess.run(["ollama", "list"], capture_output=True, text=True)
-            if result.returncode != 0:
-                return False
-            return "MODEL NAME" in result.stdout or len(result.stdout.strip().splitlines()) > 1
-        except Exception as e:
-            print(f"{e.__class__.__name__} - Error: {e}")
-            return False
+    def _check_install(self):
+        return shutil.which("ollama")
 
-    def __install(self):
+    def _install(self):
         system = platform.system()
         if system == "Darwin":
             self.__install_mac()
