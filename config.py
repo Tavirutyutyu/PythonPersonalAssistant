@@ -15,8 +15,4 @@ SYSTEM_PROMPT_VOICE = (
 SYSTEM_PROMPT_CODE = (
     "You are a coding assistant. "
 )
-ARCH_BASED = ["arch", "manjaro", "endeavouros", "garuda"]
-DEBIAN_BASED = ["debian", "ubuntu", "linuxmint", "pop", "elementary", "zorin", "kali"]
-REDHAT_BASED = ["fedora", "rhel", "centos", "almalinux", "rocky"]
-SUSE_BASED = ["opensuse", "sles"]
 

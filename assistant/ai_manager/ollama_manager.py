@@ -7,7 +7,6 @@ from signal import SIGTERM
 from subprocess import Popen, DEVNULL
 
 from assistant.ai_manager.local_ai_manager import LocalAIManager
-from config import ARCH_BASED, DEBIAN_BASED, REDHAT_BASED, SUSE_BASED
 
 
 class OllamaManager(LocalAIManager):
@@ -41,53 +40,27 @@ class OllamaManager(LocalAIManager):
             killpg(getpgid(self._process.pid), SIGTERM)
             self._process = None
 
-    def __install_linux(self):
-        linux_distro = self.__get_linux_distro()
-        if linux_distro:
-            if ARCH_BASED in linux_distro:
-                self.__install_arch()
-            elif DEBIAN_BASED in linux_distro:
-                self.__install_debian()
-            elif REDHAT_BASED in linux_distro:
-                self.__install_redhat()
-            elif SUSE_BASED in linux_distro:
-                self.__install_suse()
 
     @staticmethod
-    def __install_arch():
-        if shutil.which("yay"):
-            subprocess.run(["yay", "-S", "--noconfirm", "ollama-bin"])
-            try:
-                subprocess.run(["ollama", "pull", "llama3"], check=True)
-            except subprocess.CalledProcessError as e:
-                print(f"Failed to pull the default model. Reason: {e}")
-
-    @staticmethod
-    def __install_debian():
-        pass
-
-    @staticmethod
-    def __install_redhat():
-        pass
-
-    @staticmethod
-    def __install_suse():
-        pass
+    def __install_linux():
+        try:
+            subprocess.run([
+                "curl", "-fsSL", "https://ollama.com/install.sh", "-o", "ollama_install.sh"
+            ], check=True)
+            subprocess.run(["chmod", "+x", "ollama_install.sh"], check=True)
+            subprocess.run(["bash", "ollama_install.sh"], check=True)
+            subprocess.run(["ollama", "pull", "llama3"], check=True)
+        except subprocess.CalledProcessError as e:
+            print(f"Failed to install Ollama: {e}")
 
     @staticmethod
     def __install_windows():
-        pass
+        try:
+            print("Please install Ollama manually from https://ollama.com/download")
+            subprocess.run(["start", "https://ollama.com/download"], shell=True)
+        except Exception as e:
+            print(f"Failed to open browser for Windows install. Error: {e}")
 
     @staticmethod
     def __install_mac():
         subprocess.run(["brew", "install", "ollama"])
-
-    @staticmethod
-    def __get_linux_distro():
-        try:
-            with open("/etc/os-release", "r") as f:
-                for line in f:
-                    if line.startswith("ID="):
-                        return line.strip().split("=")[1].strip('"').lower()
-        except Exception as e:
-            print(f"Could not get linux distro:\nError Type: {e.__class__.__name__}\nError: {e}")
