@@ -1,10 +1,14 @@
 import platform
 import shutil
 import subprocess
-from text_to_speech_manager import TextToSpeechManager
+from voice.text_to_speech_manager import TTSManagerBase
+from voice.text_to_speech_handler import FestivalTTS
 
+class FestivalManager(TTSManagerBase):
+    def __init__(self):
+        super().__init__()
+        self._tts_model = FestivalTTS()
 
-class FestivalManager(TextToSpeechManager):
     def check_install(self) -> bool:
         return shutil.which("festival") is not None
 

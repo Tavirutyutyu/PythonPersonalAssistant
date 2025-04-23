@@ -6,10 +6,10 @@ from os import setsid, killpg, getpgid
 from signal import SIGTERM
 from subprocess import Popen, DEVNULL
 
-from assistant.ai_manager.local_ai_manager import LocalAIManager
+from assistant.ai_manager.local_ai_manager_base import LocalAIManagerBase
 
 
-class OllamaManager(LocalAIManager):
+class OllamaManagerBase(LocalAIManagerBase):
     def __init__(self):
         super().__init__()
 

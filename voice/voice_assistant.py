@@ -1,12 +1,14 @@
 from config import TTS_VOICE_SPEED, TTS_VOICE_VOLUME
-from voice import Listener
-from voice import FestivalTTS
-from voice import TextToSpeechBase
+from voice.listener import Listener
+from voice.text_to_speech_handler import FestivalTTS
+from voice.text_to_speech_handler import TextToSpeechBase
+from voice.text_to_speech_manager import TextToSpeechManager
 
 
 class VoiceAssistant:
     def __init__(self, language="en-US"):
         self.language = language
+        self.__tts_manager = TextToSpeechManager()
         self.__tts_engine: TextToSpeechBase = FestivalTTS()
         self.listener = Listener()
         self.set_voice_properties()

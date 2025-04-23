@@ -1,7 +1,7 @@
 import speech_recognition as sr
 from speech_recognition import WaitTimeoutError, UnknownValueError, RequestError
 
-from voice import TextToSpeechBase
+from voice.text_to_speech_handler import TextToSpeechBase
 
 
 class Listener:
