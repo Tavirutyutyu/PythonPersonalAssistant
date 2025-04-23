@@ -1,0 +1,2 @@
+from voice.text_to_speech_manager.text_to_speech_manager import TextToSpeechManager
+from voice.text_to_speech_manager.festival_manager import FestivalManager

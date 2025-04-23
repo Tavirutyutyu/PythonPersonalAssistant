@@ -1,7 +1,7 @@
 from config import TTS_VOICE_SPEED, TTS_VOICE_VOLUME
-from voice.listener import Listener
-from voice.speaker import FestivalTTS
-from voice.text_to_speech_base import TextToSpeechBase
+from voice import Listener
+from voice import FestivalTTS
+from voice import TextToSpeechBase
 
 
 class VoiceAssistant:

@@ -14,7 +14,7 @@ class OllamaManager(LocalAIManager):
         super().__init__()
 
     def _check_install(self):
-        return shutil.which("ollama")
+        return shutil.which("ollama") is not None
 
     def _install(self):
         system = platform.system()
