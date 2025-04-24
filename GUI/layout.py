@@ -1,7 +1,7 @@
 import sys
 import tkinter as tk
 
-from GUI.chat_box import ChatBox
+from GUI.chat_box import AIChatBox
 from assistant import Assistant
 
 
@@ -9,7 +9,7 @@ class Layout:
     def __init__(self, window, assistant: Assistant):
         self.assistant: Assistant = assistant
         self.window = window
-        self.chat_box = ChatBox(window, self.assistant.ai_handler)
+        self.chat_box = AIChatBox(window, self.assistant.ai_handler)
         self.chat_box.display_message("Assistant", "Welcome!")
         self.correct_prompt_button = tk.Button(window, text="Correct Prompt")
         self.stop_ai_answer_generation_button = tk.Button(window, text="Stop AI Answer Generation")
