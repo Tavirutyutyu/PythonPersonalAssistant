@@ -1,5 +1,7 @@
 import shutil
+from tkinter import Tk
 
+from GUI import Layout
 from assistant import Assistant
 
 
@@ -11,6 +13,20 @@ def main():
             assistant.listen()
     except KeyboardInterrupt:
         print("Bye")
+    finally:
+        assistant.shutdown()
+
+
+def test_gui():
+    window = Tk()
+    assistant = Assistant()
+    try:
+        assistant.greeting()
+        layout = Layout(window, assistant)
+        layout.place_on_grid()
+        layout.window.mainloop()
+    except Exception:
+        print("Quitting")
     finally:
         assistant.shutdown()
 
@@ -48,4 +64,4 @@ def test_ai_manager_check_and_install():
     print(shutil.which("ollama"))
 
 if __name__ == "__main__":
-    main()
+    test_gui()
