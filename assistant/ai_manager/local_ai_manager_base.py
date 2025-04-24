@@ -2,7 +2,7 @@ import subprocess
 from abc import ABC, abstractmethod
 
 
-class LocalAIManager(ABC):
+class LocalAIManagerBase(ABC):
     def __init__(self):
         self._process: subprocess.Popen | None = None
 

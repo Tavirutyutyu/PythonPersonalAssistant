@@ -3,7 +3,8 @@
     "browser",
     "firefox",
     "browse",
-    "browse on the internet"
+    "browse on the internet",
+    "open browser"
   ],
   "sub_options": {
     "google": "https://www.google.com",

@@ -1,0 +1,2 @@
+from voice.text_to_speech_handler.festival_tts import FestivalTTS
+from voice.text_to_speech_handler.text_to_speech_base import TextToSpeechBase

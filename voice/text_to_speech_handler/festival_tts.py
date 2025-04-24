@@ -1,7 +1,6 @@
 import subprocess
 
-from voice.text_to_speech_base import TextToSpeechBase
-
+from voice.text_to_speech_handler.text_to_speech_base import TextToSpeechBase
 
 class FestivalTTS(TextToSpeechBase):
     def __init__(self):

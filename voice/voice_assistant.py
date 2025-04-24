@@ -1,13 +1,14 @@
 from config import TTS_VOICE_SPEED, TTS_VOICE_VOLUME
 from voice.listener import Listener
-from voice.speaker import FestivalTTS
-from voice.text_to_speech_base import TextToSpeechBase
+from voice.text_to_speech_handler import TextToSpeechBase
+from voice.text_to_speech_manager import TextToSpeechManager
 
 
 class VoiceAssistant:
     def __init__(self, language="en-US"):
         self.language = language
-        self.__tts_engine: TextToSpeechBase = FestivalTTS()
+        self.__tts_manager = TextToSpeechManager()
+        self.__tts_engine: TextToSpeechBase = self.__tts_manager.get_tts_model()
         self.listener = Listener()
         self.set_voice_properties()
 
@@ -26,7 +27,6 @@ class VoiceAssistant:
         """
         Listens for speach with the microphone.
         Returns the recognised text or returns None and speaks the problem.
-
         :return text -> The recognized text or returns None:
         """
         return self.listener.listen(self.__tts_engine)
