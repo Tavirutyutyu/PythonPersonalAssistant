@@ -1,4 +1,6 @@
+import asyncio
 import shutil
+import threading
 from tkinter import Tk
 
 from GUI import Layout
@@ -53,8 +55,8 @@ def test_command_by_voice(voice_assistant, command_manager):
             if voice_option_input:
                 command.execute(voice_option_input)
 
-def test_ai_handler(ai_handler, prompt:str):
-    response = ai_handler.generate_response(prompt)
+async def test_ai_handler(ai_handler, prompt:str):
+    response = await ai_handler.generate_response(prompt)
     print(response)
 
 def test_ai_manager_check_and_install():
@@ -62,6 +64,8 @@ def test_ai_manager_check_and_install():
     ai_manager = assistant.local_ai_manager
     print(ai_manager._check_install())
     print(shutil.which("ollama"))
+
+
 
 if __name__ == "__main__":
     test_gui()

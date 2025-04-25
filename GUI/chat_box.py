@@ -1,14 +1,13 @@
 from threading import Thread
 from tkinter import scrolledtext, WORD, Entry, END, Frame, Button, StringVar
 
-from assistant import AIHandler
+from assistant import Assistant
 
 
 class AIChatBox(Frame):
-    def __init__(self, root, ai_handler: AIHandler, master=None, **kwargs):
+    def __init__(self, root, assistant: Assistant, master=None, **kwargs):
         super().__init__(master, **kwargs)
-        self.ai_handler = ai_handler
-        self.voice_mode = False  # Initially in text mode
+        self.assistant = assistant
 
         self.root = root
         self.root.title("Chat Box")
@@ -22,24 +21,31 @@ class AIChatBox(Frame):
 
         self.user_input = Entry(self.input_container, width=40)
         self.user_input.grid(row=0, column=0, sticky="ew")
-        self.user_input.bind("<Return>", self.on_enter)
+        self.user_input.bind("<Return>", self._on_enter)
 
-        self.mode_button_label = StringVar(value="Switch to Voice Mode")
-        self.mode_button = Button(self.input_container, textvariable=self.mode_button_label, command=self.toggle_mode)
-        self.mode_button.grid(row=0, column=1, padx=(5, 0))
+        self.voice_mode_button_label = StringVar(value="Enter Voice Command")
+        self.voice_mode_button = Button(self.input_container, textvariable=self.voice_mode_button_label,
+                                        command=self._voice_mode)
+        self.voice_mode_button.grid(row=0, column=1, padx=(5, 0))
 
         # Make it expand correctly
         self.input_container.columnconfigure(0, weight=1)
+        self._last_ai_msg_index = None
 
-    def toggle_mode(self):
-        self.voice_mode = not self.voice_mode
-        if self.voice_mode:
-            self.mode_button_label.set("Switch to Text Mode")
-            self.display_message("System", "Switched to Voice Mode (not yet implemented)")
-            # You can trigger your voice assistant logic here later.
-        else:
-            self.mode_button_label.set("Switch to Voice Mode")
-            self.display_message("System", "Switched to Text Mode")
+    def _voice_mode(self):
+        voice_input = self.listen()
+        Thread(target=self.process_voice_input, args=(voice_input,)).start()
+
+    def listen(self):
+        voice_input = self.assistant.listen()
+        self.display_message("You", voice_input)
+        return voice_input
+
+    def process_voice_input(self, voice_input):
+        response = self.assistant.process_user_input(voice_input)
+        if response is not None:
+            self.display_message("Voice Mode", response)
+
 
     def display_message(self, sender, message):
         self.chat_display.configure(state="normal")
@@ -47,23 +53,30 @@ class AIChatBox(Frame):
         self.chat_display.configure(state="disabled")
         self.chat_display.yview(END)
 
-    def on_enter(self, event):
-        if not self.voice_mode:
-            msg = self.user_input.get().strip()
-            if msg:
-                self.display_message("You", msg)
-                self.user_input.delete(0, END)
-                Thread(target=self.handle_ai_response, args=(msg,), daemon=True).start()
+    def _on_enter(self, event):
+        msg = self.user_input.get().strip()
+        if msg:
+            self.display_message("You", msg)
+            self.user_input.delete(0, END)
+            self._handle_ai_response(msg)
 
-    def handle_ai_response(self, prompt):
+    def _handle_ai_response(self, prompt):
         self.chat_display.configure(state="normal")
         index = self.chat_display.index("end-1c")
         self.chat_display.insert(END, "Assistant: ...\n")
         self.chat_display.configure(state="disabled")
         self.chat_display.yview(END)
+        self._last_ai_msg_index = index
+        Thread(target=self._display_ai_response, args=(prompt,), daemon=True).start()
 
-        answer = self.ai_handler.generate_response(prompt)
 
+    def _display_ai_response(self, prompt):
+        answer = self.assistant.generate_ai_answer(prompt)
+        self._update_ai_response(answer)
+
+
+    def _update_ai_response(self, answer: str):
+        index = self._last_ai_msg_index
         self.chat_display.configure(state="normal")
         self.chat_display.delete(index, f"{index} +1line")
         self.chat_display.insert(index, f"Assistant: {answer}\n")
