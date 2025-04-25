@@ -1,3 +1,5 @@
+from typing import Callable
+
 import speech_recognition as sr
 from speech_recognition import WaitTimeoutError, UnknownValueError, RequestError
 
@@ -13,12 +15,14 @@ class Listener:
         self.__phrase_time_limit = phrase_time_limit
         self.__language = language
 
-    def listen(self, speaker: TextToSpeechBase) -> str or None:
+    def listen(self, speaker: TextToSpeechBase, message_displayer: Callable[[str, str], None] | None = None) -> str or None:
         with self.__microphone as source:
             print("Adjusting to ambient noise")
+            if message_displayer: message_displayer("System", "Adjusting to ambient noise")
             self.__recognizer.adjust_for_ambient_noise(source, duration=self.__noise_adjusting_time)
             try:
                 print("Listening...")
+                if message_displayer: message_displayer("System", "Listening...")
                 audio = self.__recognizer.listen(source, timeout=self.__listen_timeout, phrase_time_limit=self.__phrase_time_limit)
                 if audio.frame_data:
                     print("Audio detected")

@@ -1,2 +1,2 @@
-from commands.command_manager import CommandManager
-from commands.command_base import Command
+from .command_manager import CommandManager
+from .command_base import Command
