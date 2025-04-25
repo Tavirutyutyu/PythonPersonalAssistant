@@ -31,22 +31,6 @@ class Assistant:
         if voice_input:
             return self.command_manager.match(voice_input)
 
-    def process_user_input(self, voice_input: str,
-                           message_displayer: Callable[[str, str], None] | None = None) -> str | None:
-        """
-        Processes a string as voice input.
-        First it checks if the voice input contains any keywords for a command, it executes the command.
-        If it cant find any keywords, it just sends the string to the AI to generate an answer to it.
-        :return text -> The method will return the AI response text if there was an AI response.
-                        Otherwise, it returns the name of the command.
-        """
-        if voice_input:
-            command = self.command_manager.match(voice_input)
-            if command:
-                self.execute(command, message_displayer)
-            else:
-                return self.generate_ai_answer(voice_input)
-
     def listen(self, message_displayer: Callable[[str, str], None] | None = None) -> str | None:
         """Listens with the microphone and returns the recognized text or returns None
         :return text -> The recognized text or returns None:"""
@@ -65,41 +49,28 @@ class Assistant:
         else:
             command.execute()
 
-    def choose_option(self, command: Command) -> str:
-        options = command.get_sub_option_keys()
-        for option in options:
-            self.voice_assistant.speak(option)
-        option_input = self.voice_assistant.listen()
-        return option_input.lower()
-
     def __execute_complex_command(self, command: Command, message_displayer: Callable[[str, str], None]) -> None:
         if message_displayer:
             message_displayer("Assistant", "Choose an option:")
-
-        self.voice_assistant.speak("Choose an option:")
+        self.voice_assistant.speak("Choose an option")
         options = command.get_sub_option_keys()
-
         if message_displayer:
-            message_displayer("Assistant", f"Options: {str(options)}")
-
+            message_displayer("Assistant", f"{str(options)}")
         voice_option_input = self.__choose_option(options)
+        self.__evaluate_sub_option_input(command, voice_option_input, message_displayer)
 
-        if voice_option_input and voice_option_input in options:
-            print(f"You choose this option: {voice_option_input}")
-            command.execute(voice_option_input)
-
-        elif not voice_option_input:
+    def __evaluate_sub_option_input(self, command: Command, sub_option_input: str, message_displayer: Callable[[str, str], None]) -> None:
+        if sub_option_input:
+            options = command.get_sub_option_keys()
+            if sub_option_input in options:
+                command.execute(sub_option_input)
+            else:
+                if message_displayer: message_displayer("Assistant", "This option does not exist.")
+                self.voice_assistant.speak("This option does not exist.")
+        else:
+            if message_displayer: message_displayer("Assistant", "Could not hear you.")
             self.voice_assistant.speak("Could not hear you.")
 
-            if message_displayer:
-                message_displayer("Assistant", "Could not hear you.")
-
-        elif voice_option_input not in options:
-            print(f"You choose this option: {voice_option_input}")
-            self.voice_assistant.speak("Invalid option")
-
-            if message_displayer:
-                message_displayer("Assistant", "Invalid option")
 
     def __choose_option(self, options: list[str]) -> str | None:
         for option in options:
