@@ -24,8 +24,7 @@ class Assistant:
         self.voice_assistant.speak(text)
 
     def generate_ai_answer(self, voice_input: str, ) -> str | None:
-        ai_answer = asyncio.run(self.ai_handler.generate_response(voice_input))
-        return ai_answer
+        return self.ai_handler.generate_response(voice_input)
 
     def match_command(self, voice_input: str) -> Command | None:
         if voice_input:

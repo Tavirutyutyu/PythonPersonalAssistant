@@ -1,8 +1,7 @@
-from threading import Thread
 from tkinter import scrolledtext, WORD, Entry, END, Frame, Button, StringVar
 
 from assistant import Assistant
-from commands import Command
+from utils import threaded
 
 
 class AIChatBox(Frame):
@@ -25,16 +24,16 @@ class AIChatBox(Frame):
 
         self.voice_mode_button_label = StringVar(value="Enter Voice Command")
         self.voice_mode_button = Button(self.input_container, textvariable=self.voice_mode_button_label,
-                                        command=lambda : Thread(target=self.__voice_mode, daemon=True).start())
+                                        command=self.__voice_mode)
         self.voice_mode_button.grid(row=0, column=1, padx=(5, 0))
 
         self.input_container.columnconfigure(0, weight=1)
         self._last_ai_msg_index = None
 
+    @threaded
     def __voice_mode(self):
         voice_input = self.__listen()
         self.__process_voice_input(voice_input)
-
 
     def __listen(self):
         voice_input = self.assistant.listen(self.display_message)
@@ -65,10 +64,12 @@ class AIChatBox(Frame):
             self.user_input.delete(0, END)
             self.__handle_ai_response(msg)
 
+    @threaded
     def __handle_ai_response(self, prompt: str, voice_on: bool = False):
         self.__ai_response_placeholder()
-        Thread(target=self.__display_ai_response, args=(prompt, voice_on,), daemon=True).start()
+        self.__display_ai_response(prompt, voice_on)
 
+    @threaded
     def __display_ai_response(self, prompt: str, voice_on: bool = False):
         answer = self.assistant.generate_ai_answer(prompt)
         self.__update_ai_response(answer)
