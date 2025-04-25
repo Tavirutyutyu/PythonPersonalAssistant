@@ -7,9 +7,8 @@ from assistant import Assistant
 
 class Layout:
     def __init__(self, window, assistant: Assistant):
-        self.assistant: Assistant = assistant
         self.window = window
-        self.chat_box = AIChatBox(window, self.assistant.ai_handler)
+        self.chat_box = AIChatBox(window, assistant)
         self.chat_box.display_message("Assistant", "Welcome!")
         self.correct_prompt_button = tk.Button(window, text="Correct Prompt")
         self.stop_ai_answer_generation_button = tk.Button(window, text="Stop AI Answer Generation")
@@ -18,7 +17,6 @@ class Layout:
     def exit(self):
         self.window.destroy()
         sys.exit(0)
-
 
     def place_on_grid(self):
         self.chat_box.grid(column=0, row=0, rowspan=3)

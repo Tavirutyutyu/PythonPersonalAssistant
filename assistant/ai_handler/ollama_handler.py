@@ -1,15 +1,23 @@
+import asyncio
+from concurrent.futures import ThreadPoolExecutor
+
 from assistant.ai_handler.ai_handler import AIHandler
 from config import OLLAMA_MODEL, OLLAMA_URL, SYSTEM_PROMPT_VOICE, SYSTEM_PROMPT_CODE
 
 import requests
 
+
 class OllamaHandler(AIHandler):
     def __init__(self, model: str = OLLAMA_MODEL):
         super().__init__(model)
         self.url = OLLAMA_URL
+        self._executor = ThreadPoolExecutor(max_workers=4)
 
-    def generate_response(self, prompt: str) -> str:
-        self._message_history.append({"role": "user", "content": prompt})
+    async def generate_response(self, prompt: str):
+        return await asyncio.to_thread(self._generate_response_sync, prompt)
+
+    def _generate_response_sync(self, prompt: str) -> str:
+        self._message_history.append(dict(role="user", content=prompt))
         full_prompt = self._format_prompt(self._message_history)
 
         response = requests.post(self.url, json={
@@ -26,7 +34,7 @@ class OllamaHandler(AIHandler):
             return f"Error: {response.status_code} - {response.text}"
 
     @staticmethod
-    def _format_prompt(messages: list[dict], mode:str="voice") -> str:
+    def _format_prompt(messages: list[dict], mode: str = "voice") -> str:
         """Turn message history into a plain text prompt Ollama understands."""
         prompt = ""
         if mode == "voice":
