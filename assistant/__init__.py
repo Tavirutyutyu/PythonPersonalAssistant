@@ -1,2 +1,2 @@
-from assistant.assistant import Assistant
-from assistant.ai_handler import AIHandler
+from .assistant import Assistant
+from .ai_handler import AIHandler

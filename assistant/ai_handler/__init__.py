@@ -1,2 +1,2 @@
-from assistant.ai_handler.ai_handler import AIHandler
-from assistant.ai_handler.ollama_handler import OllamaHandler
+from .ai_handler import AIHandler
+from .ollama_handler import OllamaHandler

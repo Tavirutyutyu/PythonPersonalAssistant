@@ -48,14 +48,14 @@ class Assistant:
         else:
             command.execute()
 
-    def __execute_complex_command(self, command: Command, message_displayer: Callable[[str, str], None]) -> None:
+    def __execute_complex_command(self, command: Command, message_displayer: Callable[[str, str], None] = None) -> None:
         if message_displayer:
             message_displayer("Assistant", "Choose an option:")
         self.voice_assistant.speak("Choose an option")
         options = command.get_sub_option_keys()
         if message_displayer:
             message_displayer("Assistant", f"{str(options)}")
-        voice_option_input = self.__choose_option(options)
+        voice_option_input = self.__choose_option(options, message_displayer)
         self.__evaluate_sub_option_input(command, voice_option_input, message_displayer)
 
     def __evaluate_sub_option_input(self, command: Command, sub_option_input: str, message_displayer: Callable[[str, str], None]) -> None:
@@ -71,10 +71,10 @@ class Assistant:
             self.voice_assistant.speak("Could not hear you.")
 
 
-    def __choose_option(self, options: list[str]) -> str | None:
+    def __choose_option(self, options: list[str], message_displayer: Callable[[str, str], None] | None = None) -> str | None:
         for option in options:
             self.voice_assistant.speak(option)
-        voice_option_input = self.voice_assistant.listen()
+        voice_option_input = self.voice_assistant.listen(message_displayer)
         if voice_option_input:
             return voice_option_input.lower()
         return None
