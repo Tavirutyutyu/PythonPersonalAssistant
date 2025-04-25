@@ -23,7 +23,7 @@ class AIChatBox(Frame):
         self.user_input.grid(row=0, column=0, sticky="ew")
         self.user_input.bind("<Return>", self._on_enter)
 
-        self.voice_mode_button_label = StringVar(value="Switch to Voice Mode")
+        self.voice_mode_button_label = StringVar(value="Enter Voice Command")
         self.voice_mode_button = Button(self.input_container, textvariable=self.voice_mode_button_label,
                                         command=self._voice_mode)
         self.voice_mode_button.grid(row=0, column=1, padx=(5, 0))
@@ -33,7 +33,19 @@ class AIChatBox(Frame):
         self._last_ai_msg_index = None
 
     def _voice_mode(self):
-        self.assistant.listen()
+        voice_input = self.listen()
+        Thread(target=self.process_voice_input, args=(voice_input,)).start()
+
+    def listen(self):
+        voice_input = self.assistant.listen()
+        self.display_message("You", voice_input)
+        return voice_input
+
+    def process_voice_input(self, voice_input):
+        response = self.assistant.process_user_input(voice_input)
+        if response is not None:
+            self.display_message("Voice Mode", response)
+
 
     def display_message(self, sender, message):
         self.chat_display.configure(state="normal")
@@ -54,15 +66,12 @@ class AIChatBox(Frame):
         self.chat_display.insert(END, "Assistant: ...\n")
         self.chat_display.configure(state="disabled")
         self.chat_display.yview(END)
-
         self._last_ai_msg_index = index
-
         Thread(target=self._display_ai_response, args=(prompt,), daemon=True).start()
 
 
     def _display_ai_response(self, prompt):
         answer = self.assistant.generate_ai_answer(prompt)
-        print(f"Answer: {answer}")
         self._update_ai_response(answer)
 
 

@@ -3,8 +3,8 @@ import sys
 
 from assistant.ai_handler import AIHandler, OllamaHandler
 from assistant.ai_manager import LocalAIManagerBase, OllamaManagerBase
-from commands import CommandManager
 from commands import Command
+from commands import CommandManager
 from voice import VoiceAssistant
 
 
@@ -25,18 +25,21 @@ class Assistant:
             self.voice_assistant.speak(ai_answer)
         return ai_answer
 
-    def process_user_input(self, voice_input: str) -> None:
+    def process_user_input(self, voice_input: str) -> str | None:
         """
         Processes a string as voice input.
         First it checks if the voice input contains any keywords for a command, it executes the command.
-        If it cant find any keywords, it just sends the string to the ai to generate an answer to it.
+        If it cant find any keywords, it just sends the string to the AI to generate an answer to it.
+        :return text -> The method will return the AI response text if there was an AI response.
+                        Otherwise, it returns the name of the command.
         """
         if voice_input:
             command = self.command_manager.match(voice_input)
             if command:
                 self.__execute(command)
+                return str(command)
             else:
-                self.generate_ai_answer(voice_input, voice_on=True)
+                return self.generate_ai_answer(voice_input, voice_on=True)
 
     def listen(self) -> str | None:
         """Listens with the microphone and returns the recognized text or returns None
