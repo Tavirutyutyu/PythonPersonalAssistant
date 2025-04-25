@@ -6,15 +6,14 @@ from config import OLLAMA_MODEL, OLLAMA_URL, SYSTEM_PROMPT_VOICE, SYSTEM_PROMPT_
 
 import requests
 
-
 class OllamaHandler(AIHandler):
     def __init__(self, model: str = OLLAMA_MODEL):
         super().__init__(model)
         self.url = OLLAMA_URL
         self._executor = ThreadPoolExecutor(max_workers=4)
 
-    async def generate_response(self, prompt: str):
-        return await asyncio.to_thread(self._generate_response_sync, prompt)
+    def generate_response(self, prompt: str):
+        return self._generate_response_sync(prompt)
 
     def _generate_response_sync(self, prompt: str) -> str:
         self._message_history.append(dict(role="user", content=prompt))
