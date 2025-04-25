@@ -1,2 +1,2 @@
-from assistant.ai_manager.local_ai_manager_base import LocalAIManagerBase
-from assistant.ai_manager.ollama_manager import OllamaManagerBase
+from .local_ai_manager_base import LocalAIManagerBase
+from .ollama_manager import OllamaManagerBase

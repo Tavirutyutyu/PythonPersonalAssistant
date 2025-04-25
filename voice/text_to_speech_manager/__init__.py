@@ -1,3 +1,3 @@
-from voice.text_to_speech_manager.tts_manager_base import TTSManagerBase
-from voice.text_to_speech_manager.festival_manager import FestivalManager
-from voice.text_to_speech_manager.tts_manager import TextToSpeechManager
+from .tts_manager_base import TTSManagerBase
+from .festival_manager import FestivalManager
+from .tts_manager import TextToSpeechManager
