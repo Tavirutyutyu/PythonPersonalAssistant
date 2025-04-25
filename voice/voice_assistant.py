@@ -1,3 +1,5 @@
+from typing import Callable
+
 from config import TTS_VOICE_SPEED, TTS_VOICE_VOLUME
 from voice.listener import Listener
 from voice.text_to_speech_handler import TextToSpeechBase
@@ -23,13 +25,13 @@ class VoiceAssistant:
         self.__tts_engine.set_property('rate', rate)
         self.__tts_engine.set_property('volume', volume)
 
-    def listen(self) -> str or None:
+    def listen(self, message_displayer: Callable[[str, str], None] | None = None) -> str or None:
         """
         Listens for speach with the microphone.
         Returns the recognised text or returns None and speaks the problem.
         :return text -> The recognized text or returns None:
         """
-        return self.listener.listen(self.__tts_engine)
+        return self.listener.listen(self.__tts_engine, message_displayer)
 
     def speak(self, text:str) -> None:
         """
