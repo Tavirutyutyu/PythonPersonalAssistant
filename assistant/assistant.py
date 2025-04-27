@@ -1,4 +1,3 @@
-import asyncio
 import sys
 from typing import Callable
 
