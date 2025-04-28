@@ -1,5 +1,5 @@
 from tkinter import scrolledtext, WORD, Entry, END, Frame, Button, StringVar
-
+from typing import Callable
 from assistant import Assistant
 from utils import threaded
 
@@ -29,6 +29,11 @@ class AIChatBox(Frame):
 
         self.input_container.columnconfigure(0, weight=1)
         self._last_ai_msg_index = None
+
+        self._current_answer_future = None
+        self.cancel_request = False
+        self._last_user_prompt = None
+
 
     @threaded
     def __voice_mode(self):
@@ -62,19 +67,63 @@ class AIChatBox(Frame):
         if msg:
             self.display_message("You", msg)
             self.user_input.delete(0, END)
+            self.cancel_request = False
             self.__handle_ai_response(msg)
 
-    @threaded
     def __handle_ai_response(self, prompt: str, voice_on: bool = False):
+        self._last_user_prompt = prompt
+        if self.cancel_request:
+            return
         self.__ai_response_placeholder()
-        self.__display_ai_response(prompt, voice_on)
+        self.__generate_ai_response(prompt, self.__display_ai_response)
 
     @threaded
-    def __display_ai_response(self, prompt: str, voice_on: bool = False):
+    def __generate_ai_response(self, prompt: str, on_done:Callable[[str], None]):
         answer = self.assistant.generate_ai_answer(prompt)
+        if self.cancel_request:
+            return
+        on_done(answer)
+
+
+    def cancel_ai_response(self):
+        self.cancel_request = True
+        self.__clear_last_ai_response()
+
+    def correct_prompt(self):
+        self.cancel_ai_response()
+        last_prompt = self._last_user_prompt
+        if last_prompt:
+            self.__clear_last_user_prompt()
+            self.user_input.delete(0, END)
+            self.user_input.insert(0, last_prompt)
+            self.user_input.focus_set()
+        
+
+    def __display_ai_response(self, answer: str, voice_on: bool = False):
+        if self.cancel_request:
+            return
         self.__update_ai_response(answer)
         if voice_on:
             self.assistant.speak(answer)
+
+    def __clear_last_ai_response(self):
+        if self._last_ai_msg_index:
+            print("Clearing...")
+            self.chat_display.configure(state="normal")
+            self.chat_display.delete(self._last_ai_msg_index, f"{self._last_ai_msg_index} +1line")
+            self.chat_display.configure(state="disabled")
+            self.chat_display.yview(END)
+
+    def __clear_last_user_prompt(self):
+        if self._last_user_prompt:
+            self.chat_display.configure(state="normal")
+            start_index = self.chat_display.search(f"You: {self._last_user_prompt}", "1.0", END)
+            if start_index:
+                self.chat_display.delete(start_index, f"{start_index} +1line")
+            self.chat_display.configure(state="disabled")
+            self.chat_display.yview(END)
+            self._last_user_prompt = None
+
 
     def __ai_response_placeholder(self):
         self.chat_display.configure(state="normal")

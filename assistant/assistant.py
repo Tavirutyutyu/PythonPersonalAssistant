@@ -1,4 +1,3 @@
-import asyncio
 import sys
 from typing import Callable
 
@@ -18,15 +17,24 @@ class Assistant:
         self.local_ai_manager.start_server()
 
     def greeting(self):
-        self.voice_assistant.speak("Welcome to your personal assistant.")
+        self.speak("Welcome to your personal assistant.")
 
     def speak(self, text: str):
         self.voice_assistant.speak(text)
 
     def generate_ai_answer(self, voice_input: str, ) -> str | None:
+        """
+        Accepts a string as an input, and it generates an AI answer.
+        :param voice_input: String to generate an AI answer for.
+        :return:
+        """
         return self.ai_handler.generate_response(voice_input)
 
     def match_command(self, voice_input: str) -> Command | None:
+        """
+        Accepts a string as an input, and it checks if it contains any keywords for any commands.
+        :param voice_input: String to check for keywords.
+        """
         if voice_input:
             return self.command_manager.match(voice_input)
 
@@ -51,7 +59,7 @@ class Assistant:
     def __execute_complex_command(self, command: Command, message_displayer: Callable[[str, str], None] = None) -> None:
         if message_displayer:
             message_displayer("Assistant", "Choose an option:")
-        self.voice_assistant.speak("Choose an option")
+        self.speak("Choose an option")
         options = command.get_sub_option_keys()
         if message_displayer:
             message_displayer("Assistant", f"{str(options)}")
@@ -65,22 +73,22 @@ class Assistant:
                 command.execute(sub_option_input)
             else:
                 if message_displayer: message_displayer("Assistant", "This option does not exist.")
-                self.voice_assistant.speak("This option does not exist.")
+                self.speak("This option does not exist.")
         else:
             if message_displayer: message_displayer("Assistant", "Could not hear you.")
-            self.voice_assistant.speak("Could not hear you.")
+            self.speak("Could not hear you.")
 
 
     def __choose_option(self, options: list[str], message_displayer: Callable[[str, str], None] | None = None) -> str | None:
         for option in options:
-            self.voice_assistant.speak(option)
+            self.speak(option)
         voice_option_input = self.voice_assistant.listen(message_displayer)
         if voice_option_input:
             return voice_option_input.lower()
         return None
 
     def shutdown(self):
-        self.voice_assistant.speak("Shutting down the assistant.")
-        self.voice_assistant.speak("Good bye!")
+        self.speak("Shutting down the assistant.")
+        self.speak("Good bye!")
         self.local_ai_manager.stop_server()
         sys.exit()
