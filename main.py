@@ -62,7 +62,7 @@ async def test_ai_handler(ai_handler, prompt:str):
 def test_ai_manager_check_and_install():
     assistant = Assistant()
     ai_manager = assistant.local_ai_manager
-    print(ai_manager._check_install())
+    print(ai_manager.check_install())
     print(shutil.which("ollama"))
 
 
