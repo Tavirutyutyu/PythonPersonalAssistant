@@ -78,13 +78,27 @@ class AIChatBox(Frame):
         self.__generate_ai_response(prompt, self.__display_ai_response)
 
     @threaded
-    def __generate_ai_response(self, prompt: str, on_done:Callable[str, None]):
+    def __generate_ai_response(self, prompt: str, on_done:Callable[[str], None]):
         answer = self.assistant.generate_ai_answer(prompt)
         if self.cancel_request:
             return
         on_done(answer)
 
-    
+
+    def cancel_ai_response(self):
+        self.cancel_request = True
+        self.__clear_last_ai_response()
+
+    def correct_prompt(self):
+        self.cancel_ai_response()
+        last_prompt = self._last_user_prompt
+        if last_prompt:
+            self.__clear_last_user_prompt()
+            self.user_input.delete(0, END)
+            self.user_input.insert(0, last_prompt)
+            self.user_input.focus_set()
+        
+
     def __display_ai_response(self, answer: str, voice_on: bool = False):
         if self.cancel_request:
             return
@@ -92,13 +106,24 @@ class AIChatBox(Frame):
         if voice_on:
             self.assistant.speak(answer)
 
-    def clear_not_needed_ai_response(self):
+    def __clear_last_ai_response(self):
         if self._last_ai_msg_index:
             print("Clearing...")
             self.chat_display.configure(state="normal")
             self.chat_display.delete(self._last_ai_msg_index, f"{self._last_ai_msg_index} +1line")
             self.chat_display.configure(state="disabled")
             self.chat_display.yview(END)
+
+    def __clear_last_user_prompt(self):
+        if self._last_user_prompt:
+            self.chat_display.configure(state="normal")
+            start_index = self.chat_display.search(f"You: {self._last_user_prompt}", "1.0", END)
+            if start_index:
+                self.chat_display.delete(start_index, f"{start_index} +1line")
+            self.chat_display.configure(state="disabled")
+            self.chat_display.yview(END)
+            self._last_user_prompt = None
+
 
     def __ai_response_placeholder(self):
         self.chat_display.configure(state="normal")
