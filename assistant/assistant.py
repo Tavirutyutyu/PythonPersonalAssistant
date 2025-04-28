@@ -20,7 +20,7 @@ class Assistant:
         self.speak("Welcome to your personal assistant.")
 
     def speak(self, text: str):
-        self.speak(text)
+        self.voice_assistant.speak(text)
 
     def generate_ai_answer(self, voice_input: str, ) -> str | None:
         """
