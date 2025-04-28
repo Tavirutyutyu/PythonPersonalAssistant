@@ -6,8 +6,7 @@ from voice.text_to_speech_handler import FestivalTTS
 
 class FestivalManager(TTSManagerBase):
     def __init__(self):
-        super().__init__()
-        self._tts_model = FestivalTTS()
+        super().__init__(FestivalTTS())
 
     def check_install(self) -> bool:
         return shutil.which("festival") is not None

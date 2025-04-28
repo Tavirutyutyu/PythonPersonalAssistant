@@ -6,17 +6,18 @@ from os import setsid, killpg, getpgid
 from signal import SIGTERM
 from subprocess import Popen, DEVNULL
 
-from assistant.ai_manager.local_ai_manager_base import LocalAIManagerBase
+from .local_ai_manager_base import LocalAIManagerBase
+from ..ai_model_handler import OllamaHandler
 
 
-class OllamaManagerBase(LocalAIManagerBase):
+class OllamaManager(LocalAIManagerBase):
     def __init__(self):
-        super().__init__()
+        super().__init__(OllamaHandler())
 
-    def _check_install(self):
+    def check_install(self):
         return shutil.which("ollama") is not None
 
-    def _install(self):
+    def install(self):
         system = platform.system()
         if system == "Darwin":
             self.__install_mac()

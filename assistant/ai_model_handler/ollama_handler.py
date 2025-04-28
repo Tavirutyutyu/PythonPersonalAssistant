@@ -1,23 +1,17 @@
-from concurrent.futures import ThreadPoolExecutor
-
 import requests
 
-from assistant.ai_handler.ai_handler import AIHandler
 from config import OLLAMA_MODEL, OLLAMA_URL, SYSTEM_PROMPT_VOICE, SYSTEM_PROMPT_CODE
+from .ai_handler import AIHandler
 
 
 class OllamaHandler(AIHandler):
     def __init__(self, model: str = OLLAMA_MODEL):
         super().__init__(model)
         self.url = OLLAMA_URL
-        self._executor = ThreadPoolExecutor(max_workers=4)
 
-    def generate_response(self, prompt: str):
-        return self._generate_response_sync(prompt)
-
-    def _generate_response_sync(self, prompt: str) -> str:
+    def generate_response(self, prompt: str, mode: str = "voice") -> str:
         self._message_history.append(dict(role="user", content=prompt))
-        full_prompt = self._format_prompt(self._message_history)
+        full_prompt = self._format_prompt(self._message_history, mode)
 
         response = requests.post(self.url, json={
             "model": self._model,
