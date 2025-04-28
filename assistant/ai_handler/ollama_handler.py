@@ -1,10 +1,10 @@
-import asyncio
 from concurrent.futures import ThreadPoolExecutor
+
+import requests
 
 from assistant.ai_handler.ai_handler import AIHandler
 from config import OLLAMA_MODEL, OLLAMA_URL, SYSTEM_PROMPT_VOICE, SYSTEM_PROMPT_CODE
 
-import requests
 
 class OllamaHandler(AIHandler):
     def __init__(self, model: str = OLLAMA_MODEL):
