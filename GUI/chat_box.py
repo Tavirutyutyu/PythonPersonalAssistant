@@ -34,6 +34,9 @@ class AIChatBox(Frame):
         self.cancel_request = False
         self._last_user_prompt = None
 
+        self.__coding_buddy_mode = False
+        self.__coding_buddy_directory_path = None
+
 
     @threaded
     def __voice_mode(self):
@@ -97,7 +100,14 @@ class AIChatBox(Frame):
             self.user_input.delete(0, END)
             self.user_input.insert(0, last_prompt)
             self.user_input.focus_set()
-        
+
+    def toggle_coding_buddy_mode(self, folder_path):
+        if self.__coding_buddy_mode:
+            self.__coding_buddy_mode = False
+            self.__coding_buddy_directory_path = None
+        else:
+            self.__coding_buddy_mode = True
+            self.__coding_buddy_directory_path = folder_path
 
     def __display_ai_response(self, answer: str, voice_on: bool = False):
         if self.cancel_request:

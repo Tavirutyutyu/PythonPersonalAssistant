@@ -9,7 +9,7 @@ class OllamaHandler(AIHandler):
         super().__init__(model)
         self.url = OLLAMA_URL
 
-    def generate_response(self, prompt: str, mode: str = "voice") -> str:
+    def generate_response(self, prompt: str, mode: str = "assistant") -> str:
         self._message_history.append(dict(role="user", content=prompt))
         full_prompt = self._format_prompt(self._message_history, mode)
 
@@ -27,10 +27,10 @@ class OllamaHandler(AIHandler):
             return f"Error: {response.status_code} - {response.text}"
 
     @staticmethod
-    def _format_prompt(messages: list[dict], mode: str = "voice") -> str:
+    def _format_prompt(messages: list[dict], mode: str = "assistant") -> str:
         """Turn message history into a plain text prompt Ollama understands."""
         prompt = ""
-        if mode == "voice":
+        if mode == "assistant":
             prompt = f"System: {SYSTEM_PROMPT_VOICE}\n"
         elif mode == "code":
             prompt = f"System: {SYSTEM_PROMPT_CODE}\n"

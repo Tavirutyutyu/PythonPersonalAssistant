@@ -32,13 +32,14 @@ class Assistant:
     def speak(self, text: str):
         self.voice_assistant.speak(text)
 
-    def generate_ai_answer(self, voice_input: str, ) -> str | None:
+    def generate_ai_answer(self, voice_input: str, mode: str = "assistant") -> str | None:
         """
         Accepts a string as an input, and it generates an AI answer.
         :param voice_input: String to generate an AI answer for.
+        :param mode: This toggles between assistant mode and coding buddy mode.
         :return:
         """
-        return self.ai_handler.generate_response(voice_input)
+        return self.ai_handler.generate_response(voice_input, mode)
 
     def match_command(self, voice_input: str) -> Command | None:
         """

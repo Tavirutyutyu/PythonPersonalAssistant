@@ -1,5 +1,5 @@
 import sys
-from tkinter import Button
+from tkinter import Button, filedialog
 
 from GUI.chat_box import AIChatBox
 from assistant import Assistant
@@ -26,8 +26,11 @@ class Layout:
         self.coding_buddy_button.grid(column=1, row=2)
         self.exit_button.grid(column=1, row=3)
 
+
     def coding_buddy_mode(self):
-        pass
+        folder_path = filedialog.askdirectory()
+        if folder_path:
+            self.chat_box.toggle_coding_buddy_mode(folder_path)
 
     def remove_from_grid(self):
         self.chat_box.grid_forget()
