@@ -1,9 +1,9 @@
 import sys
-from tkinter import Button, filedialog
+from tkinter import Button, filedialog, simpledialog
 
 from GUI.chat_box import AIChatBox
 from assistant import Assistant
-from assistant.coding_buddy import ProjectScanner
+from assistant.coding_buddy.coding_buddy import CodingBuddy
 
 
 class Layout:
@@ -12,10 +12,11 @@ class Layout:
         self.chat_box = AIChatBox(window, assistant)
         self.chat_box.display_message("Assistant", "Welcome!")
         self.correct_prompt_button = Button(window, text="Correct Prompt", command=self.correct_prompt)
-        self.stop_ai_answer_generation_button = Button(window, text="Stop AI Answer Generation", command=self.stop_ai_answer)
+        self.stop_ai_answer_generation_button = Button(window, text="Stop AI Answer Generation",
+                                                       command=self.stop_ai_answer)
         self.exit_button = Button(window, text="Exit", command=self.exit)
         self.coding_buddy_button = Button(window, text="Coding Buddy Mode", command=self.coding_buddy_mode)
-        #Test Button
+        # Test Button
         self.test_call_graph_button = Button(window, text="Test Call Graph", command=self.test_call_graph)
 
     def exit(self):
@@ -23,11 +24,15 @@ class Layout:
         sys.exit(0)
 
     def test_call_graph(self):
-        ps = ProjectScanner()
+        coding_buddy = CodingBuddy()
         folder_path = filedialog.askdirectory()
-        ps.scan(folder_path)
-        call_graph = ps.build_call_graph()
-        print(call_graph)
+        files = coding_buddy.get_project_files(folder_path)
+        graph = coding_buddy.get_call_graph(files)
+        entry_points = simpledialog.askstring(title="Entry Point", prompt="Enter the entry point function (e.g., main or Assistant.generate_ai_answer):", parent=self.window)
+        required_files = coding_buddy.get_necessary_file_names(graph, [entry_points])
+        print("Required files: " + str(required_files))
+        formatted_files = coding_buddy.get_needed_content(files)
+        print(formatted_files)
 
     def place_on_grid(self):
         self.chat_box.grid(column=0, row=0, rowspan=5)
@@ -36,7 +41,6 @@ class Layout:
         self.coding_buddy_button.grid(column=1, row=2)
         self.test_call_graph_button.grid(column=1, row=3)
         self.exit_button.grid(column=1, row=4)
-
 
     def coding_buddy_mode(self):
         folder_path = filedialog.askdirectory()
@@ -54,6 +58,3 @@ class Layout:
 
     def correct_prompt(self):
         self.chat_box.correct_prompt()
-
-
-

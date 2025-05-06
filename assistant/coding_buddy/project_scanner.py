@@ -52,8 +52,8 @@ class ProjectScanner:
 
     def build_call_graph(self):
         if self.__project_files:
-            self.call_graph_builder = CallGraphBuilder(self.__project_files)
-            call_graph = self.call_graph_builder.build()
+            self.call_graph_builder = CallGraphBuilder()
+            call_graph = self.call_graph_builder.build(self.__project_files)
             return call_graph
 
     def format_file_structure_for_ai(self) -> str:

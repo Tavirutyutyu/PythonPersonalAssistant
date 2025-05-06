@@ -2,13 +2,13 @@ import ast
 from collections import defaultdict
 
 class CallGraphBuilder:
-    def __init__(self, file_contents: dict[str, str]):
-        self.file_contents = file_contents
+    def __init__(self):
         self.call_graph = defaultdict(lambda: defaultdict(list))
 
-    def build(self) -> dict:
+    @staticmethod
+    def build(file_contents: dict[str, str]) -> dict:
         formatted_graph = {}
-        for file_name, content in self.file_contents.items():
+        for file_name, content in file_contents.items():
             try:
                 tree = ast.parse(content)
                 visitor = _QualifiedCallVisitor(content)
