@@ -1,0 +1,572 @@
+{
+  'main.py': {
+    'main': [
+      'Assistant.__init__',
+      'assistant.greeting',
+      'assistant.listen',
+      'assistant.shutdown',
+      'print'
+    ],
+    'test_gui': [
+      'Assistant.__init__',
+      'Layout.__init__',
+      'Tk.__init__',
+      'assistant.greeting',
+      'assistant.shutdown',
+      'layout.place_on_grid',
+      'layout.window.mainloop',
+      'print'
+    ],
+    'test_commands': [
+      'command.execute',
+      'print'
+    ],
+    'test_command_by_voice': [
+      'command.execute',
+      'command.get_sub_option_keys',
+      'command_manager.get_possible_keywords',
+      'command_manager.match',
+      'print',
+      'voice_assistant.listen',
+      'voice_assistant.speak'
+    ],
+    'test_ai_handler': [
+      'ai_handler.generate_response',
+      'print'
+    ],
+    'test_ai_manager_check_and_install': [
+      'Assistant.__init__',
+      'ai_manager.check_install',
+      'print',
+      'shutil.which'
+    ]
+  },
+  'assistant/assistant.py': {
+    'Assistant.__init__': [
+      'AIManager.__init__',
+      'CommandManager.__init__',
+      'VoiceAssistant.__init__',
+      'self.general_ai_manager.get_installed_manager',
+      'self.local_ai_manager.get_ai_handler',
+      'self.local_ai_manager.start_server'
+    ],
+    'Assistant.greeting': [
+      'self.speak'
+    ],
+    'Assistant.speak': [
+      'self.voice_assistant.speak'
+    ],
+    'Assistant.generate_ai_answer': [
+      'self.ai_handler.generate_response'
+    ],
+    'Assistant.match_command': [
+      'self.command_manager.match'
+    ],
+    'Assistant.listen': [
+      'self.voice_assistant.listen',
+      'strip',
+      'voice_input.lower'
+    ],
+    'Assistant.execute': [
+      'command.execute',
+      'self.__execute_complex_command'
+    ],
+    'Assistant.__execute_complex_command': [
+      'command.get_sub_option_keys',
+      'message_displayer',
+      'self.__choose_option',
+      'self.__evaluate_sub_option_input',
+      'self.speak',
+      'str'
+    ],
+    'Assistant.__evaluate_sub_option_input': [
+      'command.execute',
+      'command.get_sub_option_keys',
+      'message_displayer',
+      'self.speak'
+    ],
+    'Assistant.__choose_option': [
+      'self.speak',
+      'self.voice_assistant.listen',
+      'voice_option_input.lower'
+    ],
+    'Assistant.shutdown': [
+      'self.local_ai_manager.stop_server',
+      'self.speak',
+      'sys.exit'
+    ]
+  },
+  'assistant/ai_manager/ollama_manager.py': {
+    'OllamaManager.__init__': [
+      'OllamaHandler.__init__',
+      '__init__.__init__',
+      'super'
+    ],
+    'OllamaManager.check_install': [
+      'shutil.which'
+    ],
+    'OllamaManager.install': [
+      'platform.system',
+      'self.__install_linux',
+      'self.__install_mac',
+      'self.__install_windows'
+    ],
+    'OllamaManager._start_server': [
+      'Popen.__init__',
+      'time.sleep'
+    ],
+    'OllamaManager.stop_server': [
+      'getpgid',
+      'killpg'
+    ],
+    'OllamaManager.__install_linux': [
+      'print',
+      'subprocess.run'
+    ],
+    'OllamaManager.__install_windows': [
+      'print',
+      'subprocess.run'
+    ],
+    'OllamaManager.__install_mac': [
+      'subprocess.run'
+    ]
+  },
+  'assistant/ai_manager/ai_manager.py': {
+    'AIManager.__init__': [
+      'OllamaManager.__init__',
+      'self.__check_install'
+    ],
+    'AIManager.__check_install': [
+      'ai_manager.check_install',
+      'self.__install_default'
+    ],
+    'AIManager.__install_default': [
+      'manager.install'
+    ]
+  },
+  'assistant/ai_manager/local_ai_manager_base.py': {
+    'LocalAIManagerBase.start_server': [
+      'self._start_server',
+      'self.check_install',
+      'self.install'
+    ]
+  },
+  'assistant/coding_buddy/project_scanner.py': {
+    'ProjectScanner.scan': [
+      'f.read',
+      'open',
+      'os.path.join',
+      'os.path.relpath',
+      'os.walk'
+    ],
+    'ProjectScanner.get_structure': [
+      'count',
+      'dirpath.replace',
+      'join',
+      'lines.append',
+      'os.path.basename',
+      'os.path.relpath',
+      'os.walk',
+      'sorted'
+    ],
+    'ProjectScanner.build_call_graph': [
+      'CallGraphBuilder.__init__',
+      'self.call_graph_builder.build'
+    ],
+    'ProjectScanner.format_file_structure_for_ai': [
+      'self.get_structure'
+    ],
+    'ProjectScanner.scan_project_and_format': [
+      'self.format_file_structure_for_ai',
+      'self.scan'
+    ]
+  },
+  'assistant/coding_buddy/call_graph_builder.py': {
+    'CallGraphBuilder.__init__': [
+      'defaultdict'
+    ],
+    'CallGraphBuilder.build': [
+      '_QualifiedCallVisitor.__init__',
+      'ast.parse',
+      'self.file_contents.items',
+      'sorted',
+      'visitor.calls.items',
+      'visitor.visit'
+    ],
+    '_QualifiedCallVisitor.__init__': [
+      'defaultdict',
+      'set'
+    ],
+    '_QualifiedCallVisitor.visit_ClassDef': [
+      'self.classes_in_file.add',
+      'self.generic_visit'
+    ],
+    '_QualifiedCallVisitor.visit_FunctionDef': [
+      'self.generic_visit'
+    ],
+    '_QualifiedCallVisitor.visit_AsyncFunctionDef': [
+      'self.visit_FunctionDef'
+    ],
+    '_QualifiedCallVisitor.visit_Call': [
+      'add',
+      'first_letter.upper',
+      'self._resolve_name',
+      'self.generic_visit'
+    ],
+    '_QualifiedCallVisitor._resolve_name': [
+      'isinstance',
+      'self._resolve_name'
+    ]
+  },
+  'assistant/ai_model_handler/ollama_handler.py': {
+    'OllamaHandler.__init__': [
+      '__init__.__init__',
+      'super'
+    ],
+    'OllamaHandler.generate_response': [
+      'dict',
+      'get',
+      'requests.post',
+      'response.json',
+      'self._format_prompt',
+      'self._message_history.append',
+      'strip'
+    ],
+    'OllamaHandler._format_prompt': [
+      'print',
+      'self.__get_full_project_structure'
+    ],
+    'OllamaHandler.__get_full_project_structure': [
+      'self._project_scanner.scan_project_and_format'
+    ]
+  },
+  'assistant/ai_model_handler/ai_handler.py': {
+    'AIHandler.__init__': [
+      'ProjectScanner.__init__'
+    ]
+  },
+  'utils/threaded.py': {
+    'wrapper': [
+      'Thread.__init__',
+      'start',
+      'wraps'
+    ]
+  },
+  'utils/file_loader.py': {
+    'JsonLoader.__init__': [
+      '__init__.__init__',
+      'super'
+    ],
+    'JsonLoader.load': [
+      'json.load',
+      'open',
+      'os.path.join'
+    ]
+  },
+  'commands/commands.py': {
+    'HelloCommand.__init__': [
+      '__init__.__init__',
+      'super'
+    ],
+    'BrowserCommand.__init__': [
+      '__init__.__init__',
+      'super'
+    ],
+    'BrowserCommand.execute': [
+      'self.get_sub_options',
+      'sub_options.get',
+      'text.lower',
+      'webbrowser.open'
+    ],
+    'LaunchIDECommand.__init__': [
+      '__init__.__init__',
+      'super'
+    ],
+    'LaunchIDECommand.execute': [
+      'print',
+      'self.get_sub_options',
+      'sub_options.get',
+      'subprocess.Popen',
+      'text.lower'
+    ],
+    'ExitCommand.__init__': [
+      '__init__.__init__',
+      'super'
+    ],
+    'ExitCommand.execute': [
+      'sys.exit'
+    ]
+  },
+  'commands/command_manager.py': {
+    'CommandManager.__init__': [
+      'self.initialise_commands'
+    ],
+    'CommandManager.initialise_commands': [
+      'BrowserCommand.__init__',
+      'ExitCommand.__init__',
+      'HelloCommand.__init__',
+      'LaunchIDECommand.__init__'
+    ],
+    'CommandManager.match': [
+      'command.matches'
+    ],
+    'CommandManager.match_and_execute': [
+      'command.execute',
+      'print',
+      'self.match'
+    ],
+    'CommandManager.get_possible_keywords': [
+      'command.get_keywords',
+      'keywords.append'
+    ]
+  },
+  'commands/command_base.py': {
+    'Command.__init__': [
+      'JsonLoader.__init__',
+      'file_loader.load'
+    ],
+    'Command.matches': [
+      'any',
+      'text.lower'
+    ],
+    'Command.get_sub_options': [
+      'dict'
+    ],
+    'Command.get_sub_option_keys': [
+      'list',
+      'self.__sub_options.keys'
+    ],
+    'Command.get_keywords': [
+      'list'
+    ]
+  },
+  'GUI/chat_box.py': {
+    'AIChatBox.__init__': [
+      'Button.__init__',
+      'Entry.__init__',
+      'Frame.__init__',
+      'StringVar.__init__',
+      '__init__.__init__',
+      'scrolledtext.ScrolledText',
+      'self.chat_display.grid',
+      'self.input_container.columnconfigure',
+      'self.input_container.grid',
+      'self.root.title',
+      'self.user_input.bind',
+      'self.user_input.grid',
+      'self.voice_mode_button.grid',
+      'super'
+    ],
+    'AIChatBox.__voice_mode': [
+      'self.__listen',
+      'self.__process_voice_input'
+    ],
+    'AIChatBox.__listen': [
+      'self.assistant.listen',
+      'self.display_message'
+    ],
+    'AIChatBox.__process_voice_input': [
+      'command.execute',
+      'self.__handle_ai_response',
+      'self.assistant.execute',
+      'self.assistant.match_command'
+    ],
+    'AIChatBox.display_message': [
+      'self.chat_display.configure',
+      'self.chat_display.insert',
+      'self.chat_display.yview'
+    ],
+    'AIChatBox.__on_enter': [
+      'self.__handle_ai_response',
+      'self.display_message',
+      'self.user_input.delete',
+      'self.user_input.get',
+      'strip'
+    ],
+    'AIChatBox.__handle_ai_response': [
+      'self.__ai_response_placeholder',
+      'self.__generate_ai_response'
+    ],
+    'AIChatBox.__generate_ai_response': [
+      'on_done',
+      'self.assistant.generate_ai_answer'
+    ],
+    'AIChatBox.cancel_ai_response': [
+      'self.__clear_last_ai_response'
+    ],
+    'AIChatBox.correct_prompt': [
+      'self.__clear_last_user_prompt',
+      'self.cancel_ai_response',
+      'self.user_input.delete',
+      'self.user_input.focus_set',
+      'self.user_input.insert'
+    ],
+    'AIChatBox.__display_ai_response': [
+      'self.__update_ai_response',
+      'self.assistant.speak'
+    ],
+    'AIChatBox.__clear_last_ai_response': [
+      'print',
+      'self.chat_display.configure',
+      'self.chat_display.delete',
+      'self.chat_display.yview'
+    ],
+    'AIChatBox.__clear_last_user_prompt': [
+      'self.chat_display.configure',
+      'self.chat_display.delete',
+      'self.chat_display.search',
+      'self.chat_display.yview'
+    ],
+    'AIChatBox.__ai_response_placeholder': [
+      'self.chat_display.configure',
+      'self.chat_display.index',
+      'self.chat_display.insert',
+      'self.chat_display.yview'
+    ],
+    'AIChatBox.__update_ai_response': [
+      'self.chat_display.configure',
+      'self.chat_display.delete',
+      'self.chat_display.insert',
+      'self.chat_display.yview'
+    ]
+  },
+  'GUI/layout.py': {
+    'Layout.__init__': [
+      'AIChatBox.__init__',
+      'Button.__init__',
+      'self.chat_box.display_message'
+    ],
+    'Layout.exit': [
+      'self.window.destroy',
+      'sys.exit'
+    ],
+    'Layout.test_call_graph': [
+      'ProjectScanner.__init__',
+      'filedialog.askdirectory',
+      'print',
+      'ps.build_call_graph',
+      'ps.scan'
+    ],
+    'Layout.place_on_grid': [
+      'self.chat_box.grid',
+      'self.coding_buddy_button.grid',
+      'self.correct_prompt_button.grid',
+      'self.exit_button.grid',
+      'self.stop_ai_answer_generation_button.grid',
+      'self.test_call_graph_button.grid'
+    ],
+    'Layout.coding_buddy_mode': [
+      'filedialog.askdirectory',
+      'self.chat_box.toggle_coding_buddy_mode'
+    ],
+    'Layout.remove_from_grid': [
+      'self.chat_box.grid_forget',
+      'self.correct_prompt_button.grid_forget',
+      'self.exit_button.grid_forget',
+      'self.stop_ai_answer_generation_button.grid_forget'
+    ],
+    'Layout.stop_ai_answer': [
+      'self.chat_box.cancel_ai_response'
+    ],
+    'Layout.correct_prompt': [
+      'self.chat_box.correct_prompt'
+    ]
+  },
+  'voice/voice_assistant.py': {
+    'VoiceAssistant.__init__': [
+      'Listener.__init__',
+      'TextToSpeechManager.__init__',
+      'self.__tts_manager.get_tts_model',
+      'self.set_voice_properties'
+    ],
+    'VoiceAssistant.set_voice_properties': [
+      'self.__tts_engine.set_property'
+    ],
+    'VoiceAssistant.listen': [
+      'self.listener.listen'
+    ],
+    'VoiceAssistant.speak': [
+      'print',
+      'self.__tts_engine.run_and_wait',
+      'self.__tts_engine.say'
+    ]
+  },
+  'voice/listener.py': {
+    'Listener.__init__': [
+      'sr.Microphone',
+      'sr.Recognizer'
+    ],
+    'Listener.listen': [
+      'message_displayer',
+      'print',
+      'self.__recognizer.adjust_for_ambient_noise',
+      'self.__recognizer.listen',
+      'self.__recognizer.recognize_google',
+      'speaker.speak'
+    ]
+  },
+  'voice/text_to_speech_handler/festival_tts.py': {
+    'FestivalTTS.set_property': [
+      'max',
+      'min',
+      'print'
+    ],
+    'FestivalTTS.run_and_wait': [
+      'print',
+      'self._buffer.strip',
+      'subprocess.run'
+    ],
+    'FestivalTTS.speak': [
+      'self.run_and_wait',
+      'self.say'
+    ]
+  },
+  'voice/text_to_speech_manager/tts_manager.py': {
+    'TextToSpeechManager.__init__': [
+      'FestivalManager.__init__',
+      'self.__check_install'
+    ],
+    'TextToSpeechManager.__check_install': [
+      'self.__install_default',
+      'tts_manager.check_install'
+    ],
+    'TextToSpeechManager.__install_default': [
+      'manager.install'
+    ],
+    'TextToSpeechManager.get_tts_model': [
+      'manager.get_tts_model',
+      'self.__install_default',
+      'self.__installed_manager.get_tts_model'
+    ]
+  },
+  'voice/text_to_speech_manager/festival_manager.py': {
+    'FestivalManager.__init__': [
+      'FestivalTTS.__init__',
+      '__init__.__init__',
+      'super'
+    ],
+    'FestivalManager.check_install': [
+      'shutil.which'
+    ],
+    'FestivalManager.install': [
+      'platform.system',
+      'print',
+      'self.__install_linux',
+      'self.__install_mac',
+      'self.__install_windows'
+    ],
+    'FestivalManager.__install_linux': [
+      'print',
+      'shutil.which',
+      'subprocess.run'
+    ],
+    'FestivalManager.__install_mac': [
+      'print',
+      'shutil.which',
+      'subprocess.run'
+    ],
+    'FestivalManager.__install_windows': [
+      'print'
+    ]
+  }
+}

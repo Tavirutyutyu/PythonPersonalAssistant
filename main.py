@@ -27,8 +27,8 @@ def test_gui():
         layout = Layout(window, assistant)
         layout.place_on_grid()
         layout.window.mainloop()
-    except Exception:
-        print("Quitting")
+    except Exception as error:
+        print(f"Error: {error}\n\nQuitting...")
     finally:
         assistant.shutdown()
 

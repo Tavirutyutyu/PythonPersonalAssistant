@@ -1,5 +1,6 @@
 from tkinter import scrolledtext, WORD, Entry, END, Frame, Button, StringVar
 from typing import Callable
+
 from assistant import Assistant
 from utils import threaded
 
@@ -78,14 +79,17 @@ class AIChatBox(Frame):
         if self.cancel_request:
             return
         self.__ai_response_placeholder()
-        self.__generate_ai_response(prompt, self.__display_ai_response)
+        self.__generate_ai_response(prompt, voice_on, self.__display_ai_response)
 
     @threaded
-    def __generate_ai_response(self, prompt: str, on_done:Callable[[str], None]):
-        answer = self.assistant.generate_ai_answer(prompt)
+    def __generate_ai_response(self, prompt: str, voice_on:bool, on_done:Callable[[str, bool], None]):
+        if self.__coding_buddy_mode:
+            answer = self.assistant.generate_ai_answer(prompt, mode="code", directory_path=self.__coding_buddy_directory_path)
+        else:
+            answer = self.assistant.generate_ai_answer(prompt)
         if self.cancel_request:
             return
-        on_done(answer)
+        on_done(answer, voice_on)
 
 
     def cancel_ai_response(self):
@@ -108,6 +112,8 @@ class AIChatBox(Frame):
         else:
             self.__coding_buddy_mode = True
             self.__coding_buddy_directory_path = folder_path
+
+
 
     def __display_ai_response(self, answer: str, voice_on: bool = False):
         if self.cancel_request:

@@ -14,5 +14,7 @@ SYSTEM_PROMPT_VOICE = (
 )
 SYSTEM_PROMPT_CODE = (
     "You are a coding assistant. "
+    "You will receive full projects with all of their files. "
+    "Your job is to help the debugging and prevent me creating bugs in the future by helping me to write the program correctly. "
+    "You are allowed to send code snippets with your answer."
 )
-

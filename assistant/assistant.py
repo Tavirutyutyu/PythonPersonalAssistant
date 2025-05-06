@@ -32,14 +32,16 @@ class Assistant:
     def speak(self, text: str):
         self.voice_assistant.speak(text)
 
-    def generate_ai_answer(self, voice_input: str, mode: str = "assistant") -> str | None:
+    def generate_ai_answer(self, voice_input: str, mode: str = "assistant", directory_path: str | None = None) -> str | None:
         """
         Accepts a string as an input, and it generates an AI answer.
         :param voice_input: String to generate an AI answer for.
         :param mode: This toggles between assistant mode and coding buddy mode.
-        :return:
+        :param directory_path: If we use the coding buddy mode, it will need the project directory path so it can
+        read out and send the content of the files in the given directory so the ai can provide help.
+        :return: Returns the generated AI answer or None if something went wrong.
         """
-        return self.ai_handler.generate_response(voice_input, mode)
+        return self.ai_handler.generate_response(voice_input, mode, directory_path)
 
     def match_command(self, voice_input: str) -> Command | None:
         """
