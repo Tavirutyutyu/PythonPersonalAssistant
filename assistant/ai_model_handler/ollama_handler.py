@@ -9,9 +9,9 @@ class OllamaHandler(AIHandler):
         super().__init__(model)
         self.url = OLLAMA_URL
 
-    def generate_response(self, prompt: str, mode: str = "assistant", root_directory: str | None = None) -> str:
+    def generate_response(self, prompt: str, mode: str = "assistant", root_directory: str | None = None, entry_point:str | None = None) -> str:
         self._message_history.append(dict(role="user", content=prompt))
-        full_prompt = self._format_prompt(self._message_history, mode, root_directory)
+        full_prompt = self._format_prompt(self._message_history, mode, root_directory, entry_point)
 
         response = requests.post(self.url, json={
             "model": self._model,
@@ -26,14 +26,14 @@ class OllamaHandler(AIHandler):
         else:
             return f"Error: {response.status_code} - {response.text}"
 
-    def _format_prompt(self, messages: list[dict], mode: str = "assistant", root_directory:str|None=None) -> str:
+    def _format_prompt(self, messages: list[dict], mode: str = "assistant", root_directory:str|None=None, entry_point:str | None = None) -> str:
         """Turn message history into a plain text prompt Ollama understands."""
         prompt = ""
         if mode == "assistant":
             prompt = f"System: {SYSTEM_PROMPT_VOICE}\n"
         elif mode == "code":
             prompt = f"System: {SYSTEM_PROMPT_CODE}\n"
-            full_project_content = self.__get_full_project_structure(root_directory)
+            full_project_content = self.__get_full_project_structure(root_directory, entry_point)
             print(full_project_content)
             prompt += full_project_content
         for message in messages:
@@ -45,5 +45,5 @@ class OllamaHandler(AIHandler):
                 prompt += f"Assistant: {content}\n"
         return prompt
 
-    def __get_full_project_structure(self, root_directory: str) -> str:
-        return self._project_scanner.scan_project_and_format(root_directory)
+    def __get_full_project_structure(self, root_directory: str, entry_point: str) -> str:
+        return self._coding_buddy.generate_project_string(root_directory, entry_point)

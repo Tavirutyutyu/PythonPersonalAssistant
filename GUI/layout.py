@@ -26,13 +26,9 @@ class Layout:
     def test_call_graph(self):
         coding_buddy = CodingBuddy()
         folder_path = filedialog.askdirectory()
-        files = coding_buddy.get_project_files(folder_path)
-        graph = coding_buddy.get_call_graph(files)
         entry_points = simpledialog.askstring(title="Entry Point", prompt="Enter the entry point function (e.g., main or Assistant.generate_ai_answer):", parent=self.window)
-        required_files = coding_buddy.get_necessary_file_names(graph, [entry_points])
-        print("Required files: " + str(required_files))
-        formatted_files = coding_buddy.get_needed_content(files)
-        print(formatted_files)
+        formatted_string = coding_buddy.generate_project_string(folder_path, entry_points)
+        print(formatted_string)
 
     def place_on_grid(self):
         self.chat_box.grid(column=0, row=0, rowspan=5)
@@ -44,8 +40,9 @@ class Layout:
 
     def coding_buddy_mode(self):
         folder_path = filedialog.askdirectory()
+        entry_points = simpledialog.askstring(title="Entry Point", prompt="Enter the entry point function (e.g., main or Assistant.generate_ai_answer):", parent=self.window)
         if folder_path:
-            self.chat_box.toggle_coding_buddy_mode(folder_path)
+            self.chat_box.toggle_coding_buddy_mode(folder_path, entry_points)
 
     def remove_from_grid(self):
         self.chat_box.grid_forget()

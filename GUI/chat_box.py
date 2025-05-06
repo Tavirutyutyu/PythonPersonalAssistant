@@ -37,6 +37,7 @@ class AIChatBox(Frame):
 
         self.__coding_buddy_mode = False
         self.__coding_buddy_directory_path = None
+        self.__entry_point = None
 
 
     @threaded
@@ -84,7 +85,7 @@ class AIChatBox(Frame):
     @threaded
     def __generate_ai_response(self, prompt: str, voice_on:bool, on_done:Callable[[str, bool], None]):
         if self.__coding_buddy_mode:
-            answer = self.assistant.generate_ai_answer(prompt, mode="code", directory_path=self.__coding_buddy_directory_path)
+            answer = self.assistant.generate_ai_answer(prompt, mode="code", directory_path=self.__coding_buddy_directory_path, entry_point=self.__entry_point)
         else:
             answer = self.assistant.generate_ai_answer(prompt)
         if self.cancel_request:
@@ -105,13 +106,15 @@ class AIChatBox(Frame):
             self.user_input.insert(0, last_prompt)
             self.user_input.focus_set()
 
-    def toggle_coding_buddy_mode(self, folder_path):
+    def toggle_coding_buddy_mode(self, folder_path, entry_point):
         if self.__coding_buddy_mode:
             self.__coding_buddy_mode = False
             self.__coding_buddy_directory_path = None
+            self.__entry_point = None
         else:
             self.__coding_buddy_mode = True
             self.__coding_buddy_directory_path = folder_path
+            self.__entry_point = entry_point
 
 
 
