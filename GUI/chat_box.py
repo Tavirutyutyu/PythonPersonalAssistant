@@ -39,7 +39,6 @@ class AIChatBox(Frame):
         self.__coding_buddy_directory_path = None
         self.__entry_point = None
 
-
     @threaded
     def __voice_mode(self):
         voice_input = self.__listen()
@@ -63,7 +62,22 @@ class AIChatBox(Frame):
     # Have to be public or the program crashes
     def display_message(self, sender, message):
         self.chat_display.configure(state="normal")
-        self.chat_display.insert(END, f"{sender}: {message}\n")
+        if sender == "Assistant":
+            color = "red"
+            index = self.chat_display.index("end-1c")
+            self._last_ai_msg_index = index
+        elif sender == "You":
+            color = "blue"
+        else:
+            color = "green"
+
+        if not color in self.chat_display.tag_names():
+            self.chat_display.tag_config(color, foreground=color)
+        if "black" not in self.chat_display.tag_names():
+            self.chat_display.tag_config("black", foreground="black")
+
+        self.chat_display.insert(END, f"{sender}: ", color)
+        self.chat_display.insert(END, f"{message}\n", "black")
         self.chat_display.configure(state="disabled")
         self.chat_display.yview(END)
 
@@ -79,11 +93,11 @@ class AIChatBox(Frame):
         self._last_user_prompt = prompt
         if self.cancel_request:
             return
-        self.__ai_response_placeholder()
+        self.display_message("Assistant", "...")
         self.__generate_ai_response(prompt, voice_on, self.__display_ai_response)
 
     @threaded
-    def __generate_ai_response(self, prompt: str, voice_on:bool, on_done:Callable[[str, bool], None]):
+    def __generate_ai_response(self, prompt: str, voice_on: bool, on_done: Callable[[str, bool], None]):
         if self.__coding_buddy_mode:
             answer = self.assistant.generate_ai_answer(prompt, mode="code", directory_path=self.__coding_buddy_directory_path, entry_point=self.__entry_point)
         else:
@@ -91,7 +105,6 @@ class AIChatBox(Frame):
         if self.cancel_request:
             return
         on_done(answer, voice_on)
-
 
     def cancel_ai_response(self):
         self.cancel_request = True
@@ -115,8 +128,6 @@ class AIChatBox(Frame):
             self.__coding_buddy_mode = True
             self.__coding_buddy_directory_path = folder_path
             self.__entry_point = entry_point
-
-
 
     def __display_ai_response(self, answer: str, voice_on: bool = False):
         if self.cancel_request:
@@ -144,18 +155,7 @@ class AIChatBox(Frame):
             self._last_user_prompt = None
 
 
-    def __ai_response_placeholder(self):
-        self.chat_display.configure(state="normal")
-        index = self.chat_display.index("end-1c")
-        self.chat_display.insert(END, "Assistant: ...\n")
-        self.chat_display.configure(state="disabled")
-        self.chat_display.yview(END)
-        self._last_ai_msg_index = index
-
     def __update_ai_response(self, answer: str):
-        index = self._last_ai_msg_index
-        self.chat_display.configure(state="normal")
-        self.chat_display.delete(index, f"{index} +1line")
-        self.chat_display.insert(index, f"Assistant: {answer}\n")
-        self.chat_display.configure(state="disabled")
-        self.chat_display.yview(END)
+        self.__clear_last_ai_response()
+        self.display_message("Assistant", answer)
+
