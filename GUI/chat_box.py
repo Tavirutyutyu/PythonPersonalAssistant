@@ -1,4 +1,4 @@
-from tkinter import scrolledtext, WORD, Entry, END, Frame, Button, StringVar, filedialog
+from tkinter import scrolledtext, WORD, Entry, END, Frame, Button, StringVar, filedialog, BooleanVar
 from typing import Callable
 
 from assistant import Assistant
@@ -34,7 +34,7 @@ class AIChatBox(Frame):
         self.cancel_request = False
         self._last_user_prompt = None
 
-        self.__coding_buddy_mode = False
+        self.coding_buddy_mode = BooleanVar(value=False)
         self.__coding_buddy_directory_path = None
         self.__entry_point = None
 
@@ -95,18 +95,19 @@ class AIChatBox(Frame):
         if self.cancel_request:
             return
         self.display_message("Assistant", "...")
-        self.__generate_ai_response(prompt, voice_on, self.__display_ai_response)
+        self.__generate_ai_response(prompt, voice_on)
 
     @threaded
-    def __generate_ai_response(self, prompt: str, voice_on: bool, on_done: Callable[[str, bool], None]):
-        if self.__coding_buddy_mode:
+    def __generate_ai_response(self, prompt: str, voice_on: bool):
+        if self.coding_buddy_mode.get():
             print(self.__uploaded_file_paths)
             answer = self.assistant.generate_ai_answer(prompt, mode="code", uploaded_file_paths=self.__uploaded_file_paths)
+            self.__display_ai_response(answer, voice_on)
         else:
             answer = self.assistant.generate_ai_answer(prompt)
+            self.__display_ai_response(answer, voice_on)
         if self.cancel_request:
             return
-        on_done(answer, voice_on)
 
     def cancel_ai_response(self):
         self.cancel_request = True
@@ -122,15 +123,9 @@ class AIChatBox(Frame):
             self.user_input.focus_set()
 
     def toggle_coding_buddy_mode(self, folder_path: str | None = None, entry_point: str | None = None, uploaded_file_paths:list | None = None ):
-        if self.__coding_buddy_mode:
-            self.__coding_buddy_mode = False
-            self.__coding_buddy_directory_path = None
-            self.__entry_point = None
-        else:
-            self.__coding_buddy_mode = True
-            self.__coding_buddy_directory_path = folder_path
-            self.__entry_point = entry_point
-            self.__uploaded_file_paths = uploaded_file_paths
+        self.__coding_buddy_directory_path = folder_path
+        self.__entry_point = entry_point
+        self.__uploaded_file_paths = uploaded_file_paths
 
     def __display_ai_response(self, answer: str, voice_on: bool = False):
         if self.cancel_request:
