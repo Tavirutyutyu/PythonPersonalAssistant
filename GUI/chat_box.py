@@ -1,4 +1,4 @@
-from tkinter import scrolledtext, WORD, Entry, END, Frame, Button, StringVar
+from tkinter import scrolledtext, WORD, Entry, END, Frame, Button, StringVar, filedialog
 from typing import Callable
 
 from assistant import Assistant
@@ -13,7 +13,7 @@ class AIChatBox(Frame):
         self.root = root
         self.root.title("Chat Box")
 
-        self.chat_display = scrolledtext.ScrolledText(self, wrap=WORD, state="disabled", height=20, width=50)
+        self.chat_display = scrolledtext.ScrolledText(self, wrap=WORD, state="disabled")
         self.chat_display.grid(row=0, column=0, columnspan=2, padx=10, pady=10)
 
         self.input_container = Frame(self)
@@ -24,8 +24,7 @@ class AIChatBox(Frame):
         self.user_input.bind("<Return>", self.__on_enter)
 
         self.voice_mode_button_label = StringVar(value="Enter Voice Command")
-        self.voice_mode_button = Button(self.input_container, textvariable=self.voice_mode_button_label,
-                                        command=self.__voice_mode)
+        self.voice_mode_button = Button(self.input_container, textvariable=self.voice_mode_button_label, command=self.__voice_mode)
         self.voice_mode_button.grid(row=0, column=1, padx=(5, 0))
 
         self.input_container.columnconfigure(0, weight=1)
@@ -38,6 +37,8 @@ class AIChatBox(Frame):
         self.__coding_buddy_mode = False
         self.__coding_buddy_directory_path = None
         self.__entry_point = None
+
+        self.__uploaded_file_paths = None
 
     @threaded
     def __voice_mode(self):
@@ -99,7 +100,8 @@ class AIChatBox(Frame):
     @threaded
     def __generate_ai_response(self, prompt: str, voice_on: bool, on_done: Callable[[str, bool], None]):
         if self.__coding_buddy_mode:
-            answer = self.assistant.generate_ai_answer(prompt, mode="code", directory_path=self.__coding_buddy_directory_path, entry_point=self.__entry_point)
+            print(self.__uploaded_file_paths)
+            answer = self.assistant.generate_ai_answer(prompt, mode="code", uploaded_file_paths=self.__uploaded_file_paths)
         else:
             answer = self.assistant.generate_ai_answer(prompt)
         if self.cancel_request:
@@ -119,7 +121,7 @@ class AIChatBox(Frame):
             self.user_input.insert(0, last_prompt)
             self.user_input.focus_set()
 
-    def toggle_coding_buddy_mode(self, folder_path, entry_point):
+    def toggle_coding_buddy_mode(self, folder_path: str | None = None, entry_point: str | None = None, uploaded_file_paths:list | None = None ):
         if self.__coding_buddy_mode:
             self.__coding_buddy_mode = False
             self.__coding_buddy_directory_path = None
@@ -128,6 +130,7 @@ class AIChatBox(Frame):
             self.__coding_buddy_mode = True
             self.__coding_buddy_directory_path = folder_path
             self.__entry_point = entry_point
+            self.__uploaded_file_paths = uploaded_file_paths
 
     def __display_ai_response(self, answer: str, voice_on: bool = False):
         if self.cancel_request:

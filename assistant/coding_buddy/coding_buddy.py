@@ -12,6 +12,17 @@ class CodingBuddy:
         self.graph = None
         self.necessary_files = None
 
+
+    def combine_files(self, file_paths: list) -> str:
+        files = self.project_scanner.scan_specific_files(file_paths)
+        combined = ""
+        total_file_size = 0
+        for file in files:
+            combined += f"{file.name}\n\n{"-"*60}\n\n{file.content}\n\n{"="*60}\n\n"
+            total_file_size += file.size_kb
+        combined += f"Files total size: {round(total_file_size, 2)} Kb\n\n{"="*60}\n\n"
+        return combined
+
     def generate_project_string(self, root_directory: str, entry_point) -> str:
         files = self.get_project_files(root_directory)
         graph = self.get_call_graph(files)

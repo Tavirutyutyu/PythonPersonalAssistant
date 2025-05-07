@@ -1,4 +1,5 @@
 import os
+from dataclasses import dataclass
 
 from .call_graph_builder import CallGraphBuilder
 
@@ -9,6 +10,16 @@ class ProjectScanner:
         self.__project_files= {}
         self.__root_directory = None
         self.call_graph_builder: CallGraphBuilder | None = None
+    @staticmethod
+    def scan_specific_files(file_paths: list) -> list:
+        files = []
+        for file_path in file_paths:
+            with open(file_path, "r") as file:
+                data = file.read()
+                filename = os.path.basename(file_path)
+                size_kb = len(data.encode("utf-8")) / 1024
+                files.append(File(name=filename, content=data, size_kb=size_kb))
+        return files
 
     def scan(self, root_directory: str) -> dict[str, str]:
         """Scan the project directory and read all non-binary files, skipping excluded dirs."""
@@ -71,4 +82,8 @@ class ProjectScanner:
         self.scan(root_directory)
         return self.format_file_structure_for_ai()
 
-
+@dataclass
+class File:
+    name: str
+    content: str
+    size_kb: float

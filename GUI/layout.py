@@ -39,10 +39,10 @@ class Layout:
         self.exit_button.grid(column=1, row=4)
 
     def coding_buddy_mode(self):
-        folder_path = filedialog.askdirectory()
-        entry_points = simpledialog.askstring(title="Entry Point", prompt="Enter the entry point function (e.g., main or Assistant.generate_ai_answer):", parent=self.window)
-        if folder_path:
-            self.chat_box.toggle_coding_buddy_mode(folder_path, entry_points)
+        files = filedialog.askopenfilenames(title="Upload Files")
+        if files:
+            self.chat_box.toggle_coding_buddy_mode(uploaded_file_paths=list(files))
+
 
     def remove_from_grid(self):
         self.chat_box.grid_forget()

@@ -9,5 +9,5 @@ class AIHandler(ABC):
         self._message_history = []
         self._coding_buddy = CodingBuddy()
     @abstractmethod
-    def generate_response(self, prompt:str, mode: str = "assistant", root_directory: str | None = None, entry_point:str | None = None) -> str:
+    def generate_response(self, prompt:str, mode: str = "assistant", root_directory: str | None = None, entry_point:str | None = None, uploaded_file_paths:list | None = None) -> str:
         pass
