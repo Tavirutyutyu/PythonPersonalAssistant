@@ -1,6 +1,4 @@
-import asyncio
 import shutil
-import threading
 from tkinter import Tk
 
 from GUI import Layout

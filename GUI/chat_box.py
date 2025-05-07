@@ -1,5 +1,4 @@
-from tkinter import scrolledtext, WORD, Entry, END, Frame, Button, StringVar, filedialog, BooleanVar
-from typing import Callable
+from tkinter import scrolledtext, WORD, Entry, END, Frame, Button, StringVar, BooleanVar
 
 from assistant import Assistant
 from utils import threaded
@@ -38,7 +37,7 @@ class AIChatBox(Frame):
         self.__coding_buddy_directory_path = None
         self.__entry_point = None
 
-        self.__uploaded_file_paths = None
+        self.__uploaded_file_paths = []
 
     @threaded
     def __voice_mode(self):
@@ -125,7 +124,7 @@ class AIChatBox(Frame):
     def toggle_coding_buddy_mode(self, folder_path: str | None = None, entry_point: str | None = None, uploaded_file_paths:list | None = None ):
         self.__coding_buddy_directory_path = folder_path
         self.__entry_point = entry_point
-        self.__uploaded_file_paths = uploaded_file_paths
+        self.__uploaded_file_paths.extend(uploaded_file_paths)
 
     def __display_ai_response(self, answer: str, voice_on: bool = False):
         if self.cancel_request:
@@ -152,6 +151,8 @@ class AIChatBox(Frame):
             self.chat_display.yview(END)
             self._last_user_prompt = None
 
+    def upload_files(self, files):
+        self.__uploaded_file_paths.extend(files)
 
     def __update_ai_response(self, answer: str):
         self.__clear_last_ai_response()

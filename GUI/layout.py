@@ -1,9 +1,8 @@
 import sys
-from tkinter import Button, filedialog, simpledialog, ttk
+from tkinter import Button, filedialog, ttk
 
 from GUI.chat_box import AIChatBox
 from assistant import Assistant
-from assistant.coding_buddy.coding_buddy import CodingBuddy
 
 
 class Layout:
@@ -15,8 +14,7 @@ class Layout:
         self.stop_ai_answer_generation_button = Button(window, text="Stop AI Answer Generation",
                                                        command=self.stop_ai_answer)
         self.exit_button = Button(window, text="Exit", command=self.exit)
-        self.coding_buddy_button = Button(window, text="Coding Buddy Mode", command=self.coding_buddy_mode)
-        # Test Button
+        self.upload_files_button = Button(window, text="Upload New Files", command=self.coding_buddy_mode)
         self.coding_buddy_checkbutton = ttk.Checkbutton(window, text="Coding Buddy Mode", variable=self.chat_box.coding_buddy_mode, command=self.coding_buddy_mode)
     
     def exit(self):
@@ -28,9 +26,14 @@ class Layout:
         self.chat_box.grid(column=0, row=0, rowspan=6)
         self.correct_prompt_button.grid(column=1, row=0)
         self.stop_ai_answer_generation_button.grid(column=1, row=1)
-        self.coding_buddy_button.grid(column=1, row=2)
+        self.upload_files_button.grid(column=1, row=2)
         self.coding_buddy_checkbutton.grid(column=1, row=3)
         self.exit_button.grid(column=1, row=5)
+
+    def upload_files(self):
+        files = filedialog.askopenfilenames(title="Upload Files")
+        if files:
+            self.chat_box.upload_files(files)
 
     def coding_buddy_mode(self):
         self.window.after_idle(self._process_coding_buddy_mode)
