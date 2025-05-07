@@ -154,6 +154,9 @@ class AIChatBox(Frame):
     def upload_files(self, files):
         self.__uploaded_file_paths.extend(files)
 
+    def clear_uploaded_files(self):
+        self.__uploaded_file_paths.clear()
+
     def __update_ai_response(self, answer: str):
         self.__clear_last_ai_response()
         self.display_message("Assistant", answer)
