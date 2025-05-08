@@ -2,6 +2,7 @@ import platform
 import shutil
 import subprocess
 import time
+from pathlib import Path
 from os import setsid, killpg, getpgid
 from signal import SIGTERM
 from subprocess import Popen, DEVNULL
@@ -44,15 +45,26 @@ class OllamaManager(LocalAIManagerBase):
 
     @staticmethod
     def __install_linux():
+        script_path = Path(__file__).resolve().parents[2] / "installers" / "install_ollama.sh"
         try:
-            subprocess.run([
-                "curl", "-fsSL", "https://ollama.com/install.sh", "-o", "ollama_install.sh"
-            ], check=True)
-            subprocess.run(["chmod", "+x", "ollama_install.sh"], check=True)
-            subprocess.run(["bash", "ollama_install.sh"], check=True)
-            subprocess.run(["ollama", "pull", "llama3"], check=True)
+            subprocess.run(["bash", str(script_path)], check=True)
         except subprocess.CalledProcessError as e:
             print(f"Failed to install Ollama: {e}")
+
+    @staticmethod
+    def _check_server_status():
+        try:
+            result = subprocess.run(
+                ["curl", "-s", "http://localhost/11434/health"],
+                check=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE
+            )
+            if result.returncode == 0:
+                return True
+        except subprocess.CalledProcessError:
+            return False
+        return False
 
     @staticmethod
     def __install_windows():
