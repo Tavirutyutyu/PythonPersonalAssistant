@@ -9,11 +9,19 @@ from voice.text_to_speech_handler import TextToSpeechBase
 class Listener:
     def __init__(self, noise_adjusting_time: int = 2, listen_timeout: int = 5, phrase_time_limit: int | None = None, language: str = "en-US") -> None:
         self.__recognizer = sr.Recognizer()
-        self.__microphone = sr.Microphone()
+        self.__microphone: sr.Microphone | None =self.__initialise_microphone()
         self.__noise_adjusting_time = noise_adjusting_time
         self.__listen_timeout = listen_timeout
         self.__phrase_time_limit = phrase_time_limit
         self.__language = language
+
+    @staticmethod
+    def __initialise_microphone():
+        try:
+            microphone = sr.Microphone()
+            return microphone
+        except OSError as e:
+            print(f"Microphone not found! Error: {e}")
 
     def listen(self, speaker: TextToSpeechBase, message_displayer: Callable[[str, str], None] | None = None) -> str or None:
         with self.__microphone as source:
