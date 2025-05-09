@@ -3,19 +3,28 @@
 
 set -e
 
-curl -fsSL https://ollama.com/install.sh -o ollama_install.sh
-chmod +x ollama_install.sh
-bash ollama_install.sh &>/dev/null
-
-ollama serve &
-
-for i in {1..10}; do
-	sleep 1
-	if curl -s http://localhost:11434 > /dev/null; then
-		echo "Ollama is ready"
-		break
-	fi
-done
+if ! command -v ollama &> /dev/null; then
+	ehco "Ollama not found. Installing..."
+	curl -fsSL https://ollama.com/install.sh -o ollama_install.sh
+	chmod +x ollama_install.sh
+	bash ollama_install.sh &> /dev/null
+	rm -rf ollama_install.sh
+else
+	ehco "Ollama is already installed."
+fi
 
 
-ollama pull llama3
+if ! pgrep -x "ollama" > /dev/null; then
+	echo "Starting ollama daemon..."
+	ollama serve &
+	sleep 3
+fi
+
+if ! ollama list | grep -q "llama3"; then
+	echo "llama3 not found. Cleaning up and re-pulling..."
+	rm -rf ~/.ollama/models/library/llama3 || true
+	ollama pull llama3
+else
+	echo "llama3 already present."
+fi
+
