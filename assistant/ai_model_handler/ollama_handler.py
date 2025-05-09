@@ -14,7 +14,7 @@ class OllamaHandler(AIHandler):
             response = ollama.chat(model=OLLAMA_MODEL, messages=self._message_history)
             return response.message.content
         except ollama.ResponseError as e:
-            print(f"Error: {e.error}"
+            print(f"Error: {e.error}")
        
     def _format_prompt(self, messages: list[dict], mode: str = "assistant", root_directory:str|None=None, entry_point:str | None = None, uploaded_file_paths:list | None = None) -> str:
         """Turn message history into a plain text prompt Ollama understands."""
