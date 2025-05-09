@@ -16,7 +16,22 @@ class OllamaManager(LocalAIManagerBase):
         super().__init__(OllamaHandler())
 
     def check_install(self):
-        return shutil.which("ollama") is not None
+        ollama_installed = shutil.which("ollama") is not None
+        llama3_model_path = Path.home() / ".ollama" / "models" / "manifests" / "registry.ollama.ai" / "library" / "llama3" / "latest" 
+        if not ollama_installed:
+            return False
+
+        if not llama3_model_path.exists():
+            return False
+
+        blobs_path = Path.home() / ".ollama" / "models" / "blobs"
+        if not blobs_path.exists() or not any(blobs_path.iterdir()):
+            return False
+
+        if not any(blobs_path.glob("sha256-*")):
+            return False
+
+        return True
 
     def install(self):
         system = platform.system()
