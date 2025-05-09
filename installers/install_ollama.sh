@@ -10,7 +10,7 @@ if ! command -v ollama &> /dev/null; then
 	bash ollama_install.sh &> /dev/null
 	rm -rf ollama_install.sh
 else
-	ehco "Ollama is already installed."
+	echo "Ollama is already installed."
 fi
 
 

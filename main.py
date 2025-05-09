@@ -4,7 +4,6 @@ from tkinter import Tk
 from GUI import Layout
 from assistant import Assistant
 
-
 def main():
     assistant = Assistant()
     try:
@@ -19,12 +18,17 @@ def main():
 
 def test_gui():
     window = Tk()
+    window.lift()
+    window.update()
+    window.deiconify()
     assistant = Assistant()
+    print("Hi")
     try:
         assistant.greeting()
         layout = Layout(window, assistant)
         layout.place_on_grid()
-        layout.window.mainloop()
+        print("Grid set up")
+        window.mainloop()
     except Exception as error:
         print(f"Error: {error}\n\nQuitting...")
     finally:
@@ -66,4 +70,5 @@ def test_ai_manager_check_and_install():
 
 
 if __name__ == "__main__":
-    test_gui()
+   test_gui()
+   
