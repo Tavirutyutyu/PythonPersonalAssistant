@@ -52,7 +52,7 @@ class OllamaManager(LocalAIManagerBase):
             )
             time.sleep(1.5)
 
-    def stop_server(self):
+    def shutdown(self):
         if self._process is not None:
             killpg(getpgid(self._process.pid), SIGTERM)
             self._process = None

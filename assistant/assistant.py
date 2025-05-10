@@ -24,7 +24,7 @@ class Assistant:
         self.ai_handler: AIHandler = self.local_ai_manager.get_ai_handler()
         self.command_manager = CommandManager()
         self.voice_assistant = VoiceAssistant()
-        self.local_ai_manager.start_server()
+        self.local_ai_manager.initialise()
 
     def greeting(self):
         self.speak("Welcome to your personal assistant.")
@@ -131,5 +131,5 @@ class Assistant:
         """
         self.speak("Shutting down the assistant.")
         self.speak("Good bye!")
-        self.local_ai_manager.stop_server()
+        self.local_ai_manager.shutdown()
         sys.exit()

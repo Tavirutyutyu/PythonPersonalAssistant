@@ -22,7 +22,7 @@ class LocalAIManagerBase(ABC):
         """
         pass
 
-    def start_server(self):
+    def initialise(self):
         """
         Checks if the user has local ai installed, if not than installs one and then starts the AI local server.
         """
@@ -38,7 +38,7 @@ class LocalAIManagerBase(ABC):
         pass
 
     @abstractmethod
-    def stop_server(self):
+    def shutdown(self):
         """
         This method stops the AI local server.
         :return:
