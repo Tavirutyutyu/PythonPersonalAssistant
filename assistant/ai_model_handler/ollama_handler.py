@@ -35,8 +35,4 @@ class OllamaHandler(AIHandler):
                 prompt += f"Assistant: {content}\n"
         return prompt
 
-    def __def_combined_files(self, uploaded_file_paths:list):
-        return self._coding_buddy.combine_files(uploaded_file_paths)
-
-    def __get_full_project_structure(self, root_directory: str, entry_point: str) -> str:
-        return self._coding_buddy.generate_project_string(root_directory, entry_point)
+    

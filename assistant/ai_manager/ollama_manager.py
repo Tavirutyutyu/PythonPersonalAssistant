@@ -67,21 +67,6 @@ class OllamaManager(LocalAIManagerBase):
             print(f"Failed to install Ollama: {e}")
 
     @staticmethod
-    def _check_server_status():
-        try:
-            result = subprocess.run(
-                ["curl", "-s", "http://localhost/11434/health"],
-                check=True,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE
-            )
-            if result.returncode == 0:
-                return True
-        except subprocess.CalledProcessError:
-            return False
-        return False
-
-    @staticmethod
     def __install_windows():
         try:
             print("Please install Ollama manually from https://ollama.com/download")
