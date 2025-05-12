@@ -2,7 +2,6 @@ import os
 
 RESOURCES_DIR = os.path.join(os.path.dirname(__file__), "resources")
 OLLAMA_MODEL = "llama3"
-OLLAMA_URL = "http://localhost:11434/api/generate"
 TTS_VOICE_SPEED = 200
 TTS_VOICE_VOLUME = 1.0
 SYSTEM_PROMPT_VOICE = (
