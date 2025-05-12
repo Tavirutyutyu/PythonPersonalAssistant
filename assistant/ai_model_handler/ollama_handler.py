@@ -11,6 +11,7 @@ class OllamaHandler(AIHandler):
     def generate_response(self, prompt: str, mode: str = "assistant", root_directory: str | None = None, entry_point: str | None = None, uploaded_file_paths: list | None = None) -> str:
         self._message_history.append(dict(role="user", content=prompt))
         try:
+            full_prompt = self._format_prompt(self._message_history, uploaded_file_paths=uploaded_file_paths)
             response = ollama.chat(model=OLLAMA_MODEL, messages=self._message_history)
             return response.message.content
         except ollama.ResponseError as e:
