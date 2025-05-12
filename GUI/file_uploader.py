@@ -4,12 +4,12 @@ from config import TOKEN_LIMIT
 from transformers import LlamaTokenizer
 
 class FileUploader(Toplevel):
-    def __init__(self, master=None):
+    def __init__(self, master=None, uploaded_files=None):
         super().__init__(master)
         self.withdraw()  # Start hidden
         self.title("File Uploader")
         self.geometry("600x400")
-        self.uploaded_files = []
+        self.uploaded_files = uploaded_files
         self.total_tokens = 0
 
         self.token_label = Label(self, text=f"Used {self.total_tokens} / {TOKEN_LIMIT} tokens")
@@ -18,6 +18,8 @@ class FileUploader(Toplevel):
         self.remove_button = Button(self, text="Remove Selected", command=self.remove_selected)
         self.submit_button = Button(self, text="Submit", command=self.submit)
 
+
+    def open(self):
         self.grid_rowconfigure(1, weight=1)
         self.grid_columnconfigure(0, weight=1)
         self.token_label.grid(row=0, column=0, columnspan=3, pady=(10, 0), sticky="w", padx=10)
@@ -25,14 +27,7 @@ class FileUploader(Toplevel):
         self.add_button.grid(row=2, column=0, padx=10, pady=5, sticky="ew")
         self.remove_button.grid(row=2, column=1, padx=10, pady=5, sticky="ew")
         self.submit_button.grid(row=2, column=2, padx=10, pady=5, sticky="ew")
-
-    def open(self):
-        """Show and block input to main window until closed."""
-        self.uploaded_files = []
-        self.total_tokens = 0
-        self.listbox.delete(0, END)
         self.update_token_label()
-
         self.deiconify()
         self.grab_set()
         self.wait_window()

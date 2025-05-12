@@ -10,6 +10,7 @@ class ProjectScanner:
         self.__project_files= {}
         self.__root_directory = None
         self.call_graph_builder: CallGraphBuilder | None = None
+
     @staticmethod
     def scan_specific_files(file_paths: list) -> list:
         files = []
@@ -87,3 +88,7 @@ class File:
     name: str
     content: str
     size_kb: float
+
+    def __str__(self):
+        return f"{self.name}\n{"-"*60}{self.content}\n{"="*60}\n{self.size_kb}\n{"="*60}\n"
+

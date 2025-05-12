@@ -37,7 +37,7 @@ class AIChatBox(Frame):
         self.__coding_buddy_directory_path = None
         self.__entry_point = None
 
-        self.__uploaded_file_paths = []
+        self.uploaded_file_paths = []
 
     @threaded
     def __voice_mode(self):
@@ -99,8 +99,8 @@ class AIChatBox(Frame):
     @threaded
     def __generate_ai_response(self, prompt: str, voice_on: bool):
         if self.coding_buddy_mode.get():
-            print(self.__uploaded_file_paths)
-            answer = self.assistant.generate_ai_answer(prompt, mode="code", uploaded_file_paths=self.__uploaded_file_paths)
+            print(self.uploaded_file_paths)
+            answer = self.assistant.generate_ai_answer(prompt, mode="code", uploaded_file_paths=self.uploaded_file_paths)
             self.__display_ai_response(answer, voice_on)
         else:
             answer = self.assistant.generate_ai_answer(prompt)
@@ -121,10 +121,9 @@ class AIChatBox(Frame):
             self.user_input.insert(0, last_prompt)
             self.user_input.focus_set()
 
-    def toggle_coding_buddy_mode(self, folder_path: str | None = None, entry_point: str | None = None, uploaded_file_paths:list | None = None ):
+    def toggle_coding_buddy_mode(self, folder_path: str | None = None,  uploaded_file_paths:list | None = None ):
         self.__coding_buddy_directory_path = folder_path
-        self.__entry_point = entry_point
-        self.__uploaded_file_paths.extend(uploaded_file_paths)
+        self.uploaded_file_paths.extend(uploaded_file_paths)
 
     def __display_ai_response(self, answer: str, voice_on: bool = False):
         if self.cancel_request:
@@ -152,10 +151,10 @@ class AIChatBox(Frame):
             self._last_user_prompt = None
 
     def upload_files(self, files):
-        self.__uploaded_file_paths.extend(files)
+        self.uploaded_file_paths.extend(files)
 
     def clear_uploaded_files(self):
-        self.__uploaded_file_paths.clear()
+        self.uploaded_file_paths.clear()
 
     def __update_ai_response(self, answer: str):
         self.__clear_last_ai_response()

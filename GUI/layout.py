@@ -10,7 +10,7 @@ class Layout:
     def __init__(self, window, assistant: Assistant):
         self.window = window
         self.chat_box = AIChatBox(window, assistant)
-        self.file_uploader = FileUploader()
+        self.file_uploader = FileUploader(uploaded_files = self.chat_box.uploaded_file_paths)
 
         self.chat_box.display_message("Assistant", "Welcome!")
         self.correct_prompt_button = Button(window, text="Correct Prompt", command=self.correct_prompt)
@@ -45,6 +45,7 @@ class Layout:
 
     def _process_coding_buddy_mode(self):
         if self.chat_box.coding_buddy_mode.get():
+            self.upload_files()
             files = self.file_uploader.uploaded_files
             if files:
                 self.chat_box.toggle_coding_buddy_mode(uploaded_file_paths=files)

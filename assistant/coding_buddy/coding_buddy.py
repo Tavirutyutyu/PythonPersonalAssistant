@@ -31,6 +31,12 @@ class CodingBuddy:
         formatted_string = self.get_needed_content(project_structure, files)
         return formatted_string
 
+    def get_files_as_string(self, file_paths: list):
+        files = self.project_scanner.scan_specific_files(file_paths)
+        string = ""
+        for file in files:
+            string += str(file)
+        return string
 
     def get_project_structure(self, root_directory: str) -> str:
         output = f"Project Structure:\n{self.project_scanner.get_structure(root_directory)}\n\n"
