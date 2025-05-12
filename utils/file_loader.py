@@ -22,3 +22,4 @@ class JsonLoader(FileLoader):
         file_path = os.path.join(file_directory, file_name)
         with open(file_path, "r", encoding="utf-8") as f:
             return json.load(f)
+

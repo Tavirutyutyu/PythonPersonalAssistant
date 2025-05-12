@@ -14,6 +14,7 @@ class OllamaHandler(AIHandler):
         try:
             print(f"{full_prompt=}")
             response = ollama.chat(model=OLLAMA_MODEL, messages=full_prompt)
+            self._message_history.append(dict(role="assistant", content=response.message.content))
             return response.message.content
         except ollama.ResponseError as e:
             print(f"Error: {e.error}")
