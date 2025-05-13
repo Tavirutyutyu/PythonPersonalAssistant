@@ -1,9 +1,10 @@
+from concurrent.futures import ThreadPoolExecutor
 from functools import wraps
-from threading import Thread
 
+_executor = ThreadPoolExecutor(max_workers=4)
 
 def threaded(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
-        Thread(target=func, args=args, kwargs=kwargs, daemon=True).start()
+        _executor.submit(func, *args, **kwargs)
     return wrapper
