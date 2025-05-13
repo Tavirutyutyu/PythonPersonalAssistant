@@ -1,4 +1,4 @@
-from utils.file_loader import DocumentLoader, FileLoader
+from utils import DocumentLoader, FileLoader
 
 
 class CodingBuddy:
