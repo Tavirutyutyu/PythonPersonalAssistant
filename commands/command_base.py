@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 
 from config import RESOURCES_DIR
 from utils import JsonLoader
-from utils.file_loader import FileLoader
+from utils import FileLoader
 
 
 class Command(ABC):
