@@ -1,3 +1,4 @@
+import os
 from abc import ABC, abstractmethod
 
 from config import RESOURCES_DIR
@@ -6,7 +7,7 @@ from utils.file_loader import FileLoader
 
 
 class Command(ABC):
-    def __init__(self, name: str, file_name: str, directory_path: str = RESOURCES_DIR) -> None:
+    def __init__(self, name: str, file_name: str, directory_path: str = RESOURCES_DIR, ) -> None:
         """
         You need to provide a file that contains the command's keywords and if needed than sub options.
         For example keywords: open browser, browse, firefox...
@@ -17,8 +18,8 @@ class Command(ABC):
         :param directory_path: The directory where the file is located.
         @type sub_options: str
         """
-        file_loader: FileLoader = JsonLoader(directory=directory_path)
-        command_metadata = file_loader.load(file_name)
+        file_loader: FileLoader = JsonLoader()
+        command_metadata = file_loader.load_file(os.path.join(directory_path, file_name))
         self._name: str = name
         self.__keywords: list[str] = command_metadata["keywords"]
         self.__sub_options: dict[str, str] | None = command_metadata["sub_options"] if "sub_options" in command_metadata else None

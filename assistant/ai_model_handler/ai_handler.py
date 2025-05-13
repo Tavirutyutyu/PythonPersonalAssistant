@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from assistant.coding_buddy.coding_buddy import CodingBuddy
+from assistant.coding_buddy import CodingBuddy
 from config import SYSTEM_PROMPT_VOICE, SYSTEM_PROMPT_CODE
 
 
