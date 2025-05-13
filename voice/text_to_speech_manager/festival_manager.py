@@ -1,6 +1,8 @@
 import platform
 import shutil
 import subprocess
+from pathlib import Path
+
 from voice.text_to_speech_manager import TTSManagerBase
 from voice.text_to_speech_handler import FestivalTTS
 
@@ -24,17 +26,12 @@ class FestivalManager(TTSManagerBase):
 
     @staticmethod
     def __install_linux():
-        if shutil.which("apt"):
-            subprocess.run(["sudo", "apt", "update"])
-            subprocess.run(["sudo", "apt", "install", "-y", "festival"])
-        elif shutil.which("dnf"):
-            subprocess.run(["sudo", "dnf", "install", "-y", "festival"])
-        elif shutil.which("zypper"):
-            subprocess.run(["sudo", "zypper", "install", "-y", "festival"])
-        elif shutil.which("pacman"):
-            subprocess.run(["sudo", "pacman", "-Sy", "--noconfirm", "festival"])
-        else:
-            print("Linux package manager not recognized. Install Festival manually.")
+        script_path = Path(__file__).resolve().parents[0] / "installers" / "install_festival_tts.sh"
+        try:
+            subprocess.run(["bash", str(script_path)], check=True)
+        except subprocess.CalledProcessError as e:
+            print(f"Failed to install Ollama: {e}")
+
 
     @staticmethod
     def __install_mac():
