@@ -1,7 +1,8 @@
 import sys
-from tkinter import Button, filedialog, ttk
+from tkinter import Button, ttk
 
 from GUI.chat_box import AIChatBox
+from GUI.file_uploader import FileUploader
 from assistant import Assistant
 
 
@@ -9,11 +10,13 @@ class Layout:
     def __init__(self, window, assistant: Assistant):
         self.window = window
         self.chat_box = AIChatBox(window, assistant)
+        self.file_uploader = FileUploader(uploaded_files = self.chat_box.uploaded_file_paths)
+
         self.chat_box.display_message("Assistant", "Welcome!")
         self.correct_prompt_button = Button(window, text="Correct Prompt", command=self.correct_prompt)
         self.stop_ai_answer_generation_button = Button(window, text="Stop AI Answer Generation",
                                                        command=self.stop_ai_answer)
-        self.upload_files_button = Button(window, text="Upload New Files", command=self.coding_buddy_mode)
+        self.upload_files_button = Button(window, text="Upload New Files", command=self.upload_files)
         self.clear_files_button = Button(window, text="Clear Uploaded Files", command=self.clear_uploaded_files)
         self.coding_buddy_checkbutton = ttk.Checkbutton(window, text="Coding Buddy Mode", variable=self.chat_box.coding_buddy_mode, command=self.coding_buddy_mode)
         self.exit_button = Button(window, text="Exit", command=self.exit)
@@ -35,18 +38,17 @@ class Layout:
         self.exit_button.grid(column=1, row=5)
 
     def upload_files(self):
-        files = filedialog.askopenfilenames(title="Upload Files")
-        if files:
-            self.chat_box.upload_files(files)
+        self.file_uploader.open()
 
     def coding_buddy_mode(self):
         self.window.after_idle(self._process_coding_buddy_mode)
 
     def _process_coding_buddy_mode(self):
         if self.chat_box.coding_buddy_mode.get():
-            files = filedialog.askopenfilenames(title="Upload Files")
+            self.upload_files()
+            files = self.file_uploader.uploaded_files
             if files:
-                self.chat_box.toggle_coding_buddy_mode(uploaded_file_paths=list(files))
+                self.chat_box.toggle_coding_buddy_mode(uploaded_file_paths=files)
 
     def remove_from_grid(self):
         self.chat_box.grid_forget()

@@ -2,7 +2,6 @@ import os
 
 RESOURCES_DIR = os.path.join(os.path.dirname(__file__), "resources")
 OLLAMA_MODEL = "llama3"
-OLLAMA_URL = "http://localhost:11434/api/generate"
 TTS_VOICE_SPEED = 200
 TTS_VOICE_VOLUME = 1.0
 SYSTEM_PROMPT_VOICE = (
@@ -18,3 +17,4 @@ SYSTEM_PROMPT_CODE = (
     "Your job is to help the debugging and prevent me creating bugs in the future by helping me to write the program correctly. "
     "You are allowed to send code snippets with your answer."
 )
+TOKEN_LIMIT = 2048
