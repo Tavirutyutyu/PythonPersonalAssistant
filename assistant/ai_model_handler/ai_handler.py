@@ -1,18 +1,18 @@
 from abc import ABC, abstractmethod
 
-from assistant.coding_buddy import CodingBuddy
 from config import SYSTEM_PROMPT_VOICE, SYSTEM_PROMPT_CODE
+from utils import DocumentLoader, FileLoader, combine_documents
 
 
 class AIHandler(ABC):
 
-    def __init__(self, model:str):
+    def __init__(self, model: str):
         self._model = model
         self._message_history = []
-        self._coding_buddy = CodingBuddy()
+        self.document_loader: FileLoader = DocumentLoader()
 
     @abstractmethod
-    def generate_response(self, prompt:str, mode: str = "assistant", uploaded_file_paths:list | None = None) -> str:
+    def generate_response(self, prompt: str, mode: str = "assistant", uploaded_file_paths: list | None = None) -> str:
         pass
 
     def _format_prompt(self, messages: list[dict], mode: str = "assistant", uploaded_file_paths: list | None = None) -> list[dict[str, str]]:
@@ -22,7 +22,8 @@ class AIHandler(ABC):
             formatted_messages.append({"role": "system", "content": SYSTEM_PROMPT_VOICE})
         elif mode == "code":
             formatted_messages.append({"role": "system", "content": SYSTEM_PROMPT_CODE})
-            files = self._coding_buddy.get_files_as_string(uploaded_file_paths)
+            file_list = self.document_loader.load_files(uploaded_file_paths)
+            files = combine_documents(file_list)
             formatted_messages.append({"role": "system", "content": files})
         for message in messages:
             role = message["role"]

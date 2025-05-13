@@ -12,6 +12,7 @@ class FileLoader(ABC):
     def load_files(self, file_paths: list[str]):
         return [self.load_file(file_path) for file_path in file_paths]
 
+
 class JsonLoader(FileLoader):
 
     def load_file(self, file_path: str):
@@ -27,7 +28,6 @@ class DocumentLoader(FileLoader):
             filename = os.path.basename(path)
             size_kb = len(data.encode("utf-8")) / 1024
             return Document(name=filename, content=data, size_kb=size_kb)
-
 
 
 @dataclass
