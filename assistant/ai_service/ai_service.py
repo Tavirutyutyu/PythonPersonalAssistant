@@ -1,21 +1,43 @@
+import subprocess
 from abc import ABC, abstractmethod
 
 from config import SYSTEM_PROMPT_VOICE, SYSTEM_PROMPT_CODE
-from utils import DocumentLoader, FileLoader, combine_documents
+from utils import combine_documents, FileLoader, DocumentLoader
 
 
-class AIHandler(ABC):
-
-    def __init__(self, model: str):
-        self._model = model
+class AIService(ABC):
+    def __init__(self):
         self._message_history = []
         self.document_loader: FileLoader = DocumentLoader()
+        self._process: subprocess.Popen | None = None
+
+    def initialize(self):
+        if not self.check_install():
+            self.install()
+        self.start()
 
     @abstractmethod
-    def generate_response(self, prompt: str, mode: str = "assistant", uploaded_file_paths: list | None = None) -> str:
+    def check_install(self):
         pass
 
-    def _format_prompt(self, messages: list[dict], mode: str = "assistant", uploaded_file_paths: list | None = None) -> list[dict[str, str]]:
+    @abstractmethod
+    def install(self):
+        pass
+
+    @abstractmethod
+    def start(self):
+        pass
+
+    @abstractmethod
+    def stop(self):
+        pass
+
+    @abstractmethod
+    def generate_answer(self, prompt: str, mode: str = "assistant", uploaded_file_paths: list | None = None):
+        pass
+
+    def _format_prompt(self, messages: list[dict], mode: str = "assistant", uploaded_file_paths: list | None = None) -> \
+    list[dict[str, str]]:
         """Turn message history into a dictionary or JSON format for the AI to understand."""
         formatted_messages = []
         if mode == "assistant":

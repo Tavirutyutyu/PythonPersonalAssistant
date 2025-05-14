@@ -1,8 +1,8 @@
 import sys
 from typing import Callable
 
-from assistant.ai_manager import LocalAIManagerBase, AIManager
-from assistant.ai_model_handler import AIHandler
+from assistant.ai_service import AIServiceManager
+from assistant.ai_service.ai_service import AIService
 from commands import Command
 from commands import CommandManager
 from voice import VoiceAssistant
@@ -11,37 +11,33 @@ from voice import VoiceAssistant
 class Assistant:
     def __init__(self):
         """
-        The general_ai_manager is responsible for choosing the correct AI manager.
-        The local_ai_manager is checking if a specific AI is installed, if not than installs one according to the operating system.
-        The local_ai_manager is also providing the ai_handler according to the installed AI.
-        The ai_handler is responsible for the communication with the AI.
+        The ai_service is responsible for checking if the ai is installed or not, install it if needed,
+        and it manages the server if needed AND generates the answers with the ai.
         The command_manager is providing the command to execute by a keyword.
         The voice_assistant is responsible for the voice recognition and the text-to-speech.
         And on the end of the init we start he local ai server.
         """
-        self.general_ai_manager = AIManager()
-        self.local_ai_manager: LocalAIManagerBase = self.general_ai_manager.get_installed_manager()
-        self.ai_handler: AIHandler = self.local_ai_manager.get_ai_handler()
+        self.ai_service: AIService = AIServiceManager.get_installed_service()
         self.command_manager = CommandManager()
         self.voice_assistant = VoiceAssistant()
-        self.local_ai_manager.initialise()
-
+        self.ai_service.initialize()
     def greeting(self):
         self.speak("Welcome to your personal assistant.")
 
     def speak(self, text: str):
         self.voice_assistant.speak(text)
 
-    def generate_ai_answer(self, voice_input: str, mode: str = "assistant", uploaded_file_paths:list | None = None) -> str | None:
+    def generate_ai_answer(self, prompt: str, mode: str = "assistant", uploaded_file_paths: list | None = None) -> str | None:
         """
         Accepts a string as an input, and it generates an AI answer.
-        :param voice_input: String to generate an AI answer for.
+        :param prompt: String to generate an AI answer for.
         :param mode: This toggles between assistant mode and coding buddy mode.
         :param uploaded_file_paths: Paths to files to upload.
         read out and send the content of the files in the given directory so the ai can provide help.
         :return: Returns the generated AI answer or None if something went wrong.
         """
-        return self.ai_handler.generate_response(voice_input, mode, uploaded_file_paths)
+        return self.ai_service.generate_answer(prompt, mode, uploaded_file_paths)
+
 
     def match_command(self, voice_input: str) -> Command | None:
         """
@@ -129,5 +125,5 @@ class Assistant:
         """
         self.speak("Shutting down the assistant.")
         self.speak("Good bye!")
-        self.local_ai_manager.shutdown()
+        self.ai_service.stop()
         sys.exit()
