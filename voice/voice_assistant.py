@@ -1,29 +1,25 @@
 from typing import Callable
 
-from config import TTS_VOICE_SPEED, TTS_VOICE_VOLUME
+from config import TTS_VOICE_SPEED
 from voice.listener import Listener
-from voice.text_to_speech_handler import TextToSpeechBase
-from voice.text_to_speech_manager import TextToSpeechManager
+from voice.tts_service.TtsManager import TtsManager
+from voice.tts_service.tts_service import TtsService
 
 
 class VoiceAssistant:
     def __init__(self, language="en-US"):
         self.language = language
-        self.__tts_manager = TextToSpeechManager()
-        self.__tts_engine: TextToSpeechBase = self.__tts_manager.get_tts_model()
+        self.__tts_engine: TtsService = TtsManager.get_installed_service()
         self.listener = Listener()
-        self.set_voice_properties()
 
-    def set_voice_properties(self, rate:int=TTS_VOICE_SPEED, volume:float=TTS_VOICE_VOLUME) -> None:
+    def set_voice_properties(self, rate:int=TTS_VOICE_SPEED, voice:str = None) -> None:
         """
-        Sets the speach rate and volume.
-        @:param rate: Speech rate.
-        @:type rate: int
-        @:param volume: Speech volume.
-        @:type volume: float
+        #TODO rewrite the documentation
         """
-        self.__tts_engine.set_property('rate', rate)
-        self.__tts_engine.set_property('volume', volume)
+        if rate:
+            self.__tts_engine.set_voice_property(speed=rate)
+        if voice:
+            self.__tts_engine.set_voice_property(voice=voice)
 
     def listen(self, message_displayer: Callable[[str, str], None] | None = None) -> str or None:
         """
@@ -40,6 +36,5 @@ class VoiceAssistant:
         """
         try:
             self.__tts_engine.say(text)
-            self.__tts_engine.run_and_wait()
         except Exception as e:
             print(f"Error in speech synthesis\t|\t{e}")
