@@ -3,13 +3,13 @@ from typing import Callable
 import speech_recognition as sr
 from speech_recognition import WaitTimeoutError, UnknownValueError, RequestError
 
-from voice.text_to_speech_handler import TextToSpeechBase
+from voice.tts_service.tts_service import TtsService
 
 
 class Listener:
     def __init__(self, noise_adjusting_time: int = 2, listen_timeout: int = 5, phrase_time_limit: int | None = None, language: str = "en-US") -> None:
         self.__recognizer = sr.Recognizer()
-        self.__microphone: sr.Microphone | None =self.__initialise_microphone()
+        self.__microphone: sr.Microphone | None = self.__initialise_microphone()
         self.__noise_adjusting_time = noise_adjusting_time
         self.__listen_timeout = listen_timeout
         self.__phrase_time_limit = phrase_time_limit
@@ -23,7 +23,7 @@ class Listener:
         except OSError as e:
             print(f"Microphone not found! Error: {e}")
 
-    def listen(self, speaker: TextToSpeechBase, message_displayer: Callable[[str, str], None] | None = None) -> str or None:
+    def listen(self, speaker: TtsService, message_displayer: Callable[[str, str], None] | None = None) -> str or None:
         with self.__microphone as source:
             print("Adjusting to ambient noise")
             if message_displayer: message_displayer("System", "Adjusting to ambient noise")
@@ -40,13 +40,13 @@ class Listener:
                     return None
             except WaitTimeoutError:
                 print("⏸ Timeout: No speech detected. Stopping...")
-                speaker.speak("Timeout. No speech detected. Stopping...")
+                speaker.say("Timeout. No speech detected. Stopping...")
                 return None
             except UnknownValueError:
                 print("🤷 I couldn’t understand what you said.")
-                speaker.speak("I couldn't understand what you said.")
+                speaker.say("I couldn't understand what you said.")
                 return None
             except RequestError as e:
                 print(f"❌ Google API error: {e}")
-                speaker.speak("Google API error. Please try again later.")
+                speaker.say("Google API error. Please try again later.")
                 return None
