@@ -2,7 +2,7 @@ from assistant.ai_service.ollama_service import OllamaService
 from assistant.ai_service.ai_service import AIService
 
 
-class AIServiceManager:
+class AIManager:
     services: list[AIService] = [OllamaService()]
 
     @classmethod
@@ -10,7 +10,7 @@ class AIServiceManager:
         for service in cls.services:
             if service.check_install():
                 return service
-        return AIServiceManager.install_default_service()
+        return cls.install_default_service()
 
     @classmethod
     def install_default_service(cls) -> AIService:
