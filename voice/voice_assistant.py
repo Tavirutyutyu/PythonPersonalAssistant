@@ -2,8 +2,8 @@ from typing import Callable
 
 from config import TTS_VOICE_SPEED
 from voice.listener import Listener
-from voice.tts_service.TtsManager import TtsManager
-from voice.tts_service.tts_service import TtsService
+from voice.tts_service import TtsManager
+from voice.tts_service import TtsService
 
 
 class VoiceAssistant:

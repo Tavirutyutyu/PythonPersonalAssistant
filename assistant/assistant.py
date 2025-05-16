@@ -1,7 +1,7 @@
 import sys
 from typing import Callable
 
-from assistant.ai_service import AIServiceManager
+from assistant.ai_service import AIManager
 from assistant.ai_service.ai_service import AIService
 from commands import Command
 from commands import CommandManager
@@ -17,7 +17,7 @@ class Assistant:
         The voice_assistant is responsible for the voice recognition and the text-to-speech.
         And on the end of the init we start he local ai server.
         """
-        self.ai_service: AIService = AIServiceManager.get_installed_service()
+        self.ai_service: AIService = AIManager.get_installed_service()
         self.command_manager = CommandManager()
         self.voice_assistant = VoiceAssistant()
         self.ai_service.initialize()
