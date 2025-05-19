@@ -1,7 +1,22 @@
+from tkinter import Tk
+
+from GUI.settings_window import SettingsWindow
 from voice.tts_service.festival_service import FestivalService
 from random import choice
 
-festival_service = FestivalService()
-voices = festival_service.get_festival_voices()
-festival_service.set_voice_property(voice=choice(voices), speed=1.2)
-festival_service.say("Hello there!")
+
+
+def test_festival_service(text_to_say):
+    festival_service = FestivalService()
+    voices = festival_service.get_festival_voices()
+    festival_service.set_voice_property(voice=choice(voices), speed=1.2)
+    festival_service.say(text_to_say)
+
+
+def test_settings_window():
+    window = Tk()
+    settings_window = SettingsWindow(window)
+    window.mainloop()
+
+#test_festival_service("Hello World")
+test_settings_window()

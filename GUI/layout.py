@@ -3,6 +3,7 @@ from tkinter import Button, ttk
 
 from GUI.chat_box import AIChatBox
 from GUI.file_uploader import FileUploader
+from GUI.settings_window import SettingsWindow
 from assistant import Assistant
 
 
@@ -11,6 +12,7 @@ class Layout:
         self.window = window
         self.chat_box = AIChatBox(window, assistant)
         self.file_uploader = FileUploader(uploaded_files = self.chat_box.uploaded_file_paths)
+        self.settings_window = SettingsWindow(window)
 
         self.chat_box.display_message("Assistant", "Welcome!")
         self.correct_prompt_button = Button(window, text="Correct Prompt", command=self.correct_prompt)
@@ -19,11 +21,15 @@ class Layout:
         self.upload_files_button = Button(window, text="Upload New Files", command=self.upload_files)
         self.clear_files_button = Button(window, text="Clear Uploaded Files", command=self.clear_uploaded_files)
         self.coding_buddy_checkbutton = ttk.Checkbutton(window, text="Coding Buddy Mode", variable=self.chat_box.coding_buddy_mode, command=self.coding_buddy_mode)
+        self.settings_button = Button(window, text="Settings", command=self.open_settings)
         self.exit_button = Button(window, text="Exit", command=self.exit)
 
     def exit(self):
         self.window.destroy()
         sys.exit(0)
+
+    def open_settings(self):
+        self.settings_window.open()
 
     def clear_uploaded_files(self):
         self.chat_box.clear_uploaded_files()
@@ -35,7 +41,8 @@ class Layout:
         self.upload_files_button.grid(column=1, row=2)
         self.clear_files_button.grid(column=1, row=3)
         self.coding_buddy_checkbutton.grid(column=1, row=4)
-        self.exit_button.grid(column=1, row=5)
+        self.settings_button.grid(column=1, row=5)
+        self.exit_button.grid(column=1, row=6)
 
     def upload_files(self):
         self.file_uploader.open()
