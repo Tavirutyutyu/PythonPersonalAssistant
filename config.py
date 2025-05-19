@@ -17,4 +17,7 @@ SYSTEM_PROMPT_CODE = (
     "Your job is to help the debugging and prevent me creating bugs in the future by helping me to write the program correctly. "
     "You are allowed to send code snippets with your answer."
 )
+USER_INPUT_LANGUAGES = ["english", "hungarian"]
+SYSTEM_OUTPUT_LANGUAGES = ["english", "hungarian"]
 TOKEN_LIMIT = 2048
+#in settings: tts voice model, language setting for user input, language setting for AI and tts output, tts speach speed
