@@ -41,8 +41,8 @@ class Layout:
         self.upload_files_button.grid(column=1, row=2)
         self.clear_files_button.grid(column=1, row=3)
         self.coding_buddy_checkbutton.grid(column=1, row=4)
-        self.settings_button.grid(column=1, row=5)
-        self.exit_button.grid(column=1, row=6)
+        #self.settings_button.grid(column=1, row=5)
+        self.exit_button.grid(column=1, row=5)
 
     def upload_files(self):
         self.file_uploader.open()

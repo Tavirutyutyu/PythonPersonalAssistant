@@ -11,11 +11,6 @@ class AIService(ABC):
         self.document_loader: FileLoader = DocumentLoader()
         self._process: subprocess.Popen | None = None
 
-    def initialize(self):
-        if not self.check_install():
-            self.install()
-        self.start()
-
     @abstractmethod
     def check_install(self):
         pass
@@ -36,8 +31,12 @@ class AIService(ABC):
     def generate_answer(self, prompt: str, mode: str = "assistant", uploaded_file_paths: list | None = None):
         pass
 
-    def _format_prompt(self, messages: list[dict], mode: str = "assistant", uploaded_file_paths: list | None = None) -> \
-    list[dict[str, str]]:
+    def initialize(self):
+        if not self.check_install():
+            self.install()
+        self.start()
+
+    def _format_prompt(self, messages: list[dict], mode: str = "assistant", uploaded_file_paths: list | None = None) ->  list[dict[str, str]]:
         """Turn message history into a dictionary or JSON format for the AI to understand."""
         formatted_messages = []
         if mode == "assistant":
@@ -52,3 +51,5 @@ class AIService(ABC):
             content = message["content"]
             formatted_messages.append({"role": role, "content": content})
         return formatted_messages
+
+

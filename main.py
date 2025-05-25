@@ -1,8 +1,8 @@
-import shutil
 from tkinter import Tk
 
 from GUI import Layout
 from assistant import Assistant
+
 
 def main():
     window = Tk()
@@ -24,4 +24,3 @@ def main():
 
 if __name__ == "__main__":
    main()
-   
