@@ -1,4 +1,4 @@
-<a id="readme-top"></a>
+from commands import Command<a id="readme-top"></a>
 
 <!-- TABLE OF CONTENTS -->
 <details>
@@ -79,7 +79,29 @@ python3 main.py
 
 
 ## Usage and Customisation
+I designed this application in a way so it's easy to add your own voice commands. You just need to know a little bit of python. 
+And if you are a little bit bigger of a python master, you could even add your own AI or TTS service.
+To add your own command you need to create a json file to hold the keywords that can trigger your command, and sub_options if you have.
+For example to run the browser I have keywords like: [browse, open browser, open firefox...] and I have sub-options like: [google, youtube, github...] to open these sites in the browser.
+And if your_command.json is in the resources folder you can write the class for it in python. It goes into the commands/commands.py just on the bottom. 
+Here is an example:
 
+```python
+from commands import Command
+
+
+class MyCommand(Command):
+    def __init__(self):
+        super().__init__(name="the name of your command", file_name="your_command.json")
+
+    def execute(self, text: str | None = None):
+        """
+        Implement your solution here...
+        :param text: This is the chosen sub-option
+        :type text: str | None
+        """
+        pass
+```
 
 
 <!-- MARKDOWN LINKS & IMAGES -->
