@@ -1,4 +1,4 @@
-from commands import Command<a id="readme-top"></a>
+<a id="readme-top"></a>
 
 <!-- TABLE OF CONTENTS -->
 <details>
@@ -18,12 +18,7 @@ from commands import Command<a id="readme-top"></a>
         <li><a href="#running-the-application">Running the application</a></li>
       </ul>
     </li>
-    <li><a href="#usage">Usage</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#contributing">Contributing</a></li>
-    <li><a href="#license">License</a></li>
-    <li><a href="#contact">Contact</a></li>
-    <li><a href="#acknowledgments">Acknowledgments</a></li>
+    <li><a href="#usage-and-customisation">Usage and Customisation</a></li>
   </ol>
 </details>
 
