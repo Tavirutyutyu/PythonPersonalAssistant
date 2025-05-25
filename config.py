@@ -20,4 +20,3 @@ SYSTEM_PROMPT_CODE = (
 USER_INPUT_LANGUAGES = ["english", "hungarian"]
 SYSTEM_OUTPUT_LANGUAGES = ["english", "hungarian"]
 TOKEN_LIMIT = 2048
-#in settings: tts voice model, language setting for user input, language setting for AI and tts output, tts speach speed

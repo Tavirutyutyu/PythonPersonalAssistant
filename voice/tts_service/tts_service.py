@@ -14,5 +14,6 @@ class TtsService(ABC):
         pass
 
     @abstractmethod
-    def set_voice_property(self, speed: float = None, voice: str = None) -> None:
+    def set_voice_property(self, speed: float = None, voice: str = None):
         pass
+

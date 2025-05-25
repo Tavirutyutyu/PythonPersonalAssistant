@@ -21,6 +21,7 @@ class Assistant:
         self.command_manager = CommandManager()
         self.voice_assistant = VoiceAssistant()
         self.ai_service.initialize()
+
     def greeting(self):
         self.speak("Welcome to your personal assistant.")
 
