@@ -26,3 +26,4 @@ SYSTEM_PROMPT_CODE_HUNGARIAN = (
     "A te dolgod a programhibák felfedezése és kijavítása. "
     "Küldhetsz programkódot a válaszodban. "
 )
+from .config import Configuration

@@ -39,9 +39,13 @@ class SettingsWindow(Toplevel):
         user_language = self.user_language_dropdown.get()
         system_language = self.system_language_dropdown.get()
 
+        if voice_model:
+            Configuration.update_tts(voice=voice_model)
+
         print(f"{voice_model=}")
         print(f"{user_language=}")
         print(f"{system_language=}")
+        print(f"{Configuration.TTS}")
 
         self.grab_release()
         self.withdraw()

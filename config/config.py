@@ -11,7 +11,7 @@ class Configuration:
     TOKEN_LIMIT = 2048
 
     TTS = {
-        "voice_speed": 200,
+        "voice_speed": 1.0,
         "voice_model": "kal_diphone",
     }
 
@@ -45,7 +45,7 @@ class Configuration:
             raise ValueError(f"Language '{lang}' is not supported.")
 
     @classmethod
-    def update_tts(cls, speed:int | None, voice:str | None):
+    def update_tts(cls, speed:int | None = None, voice:str | None = None):
         if speed:
             cls.TTS["voice_speed"] = speed
         if voice:
