@@ -1,4 +1,4 @@
-import os
+TOKEN_LIMIT = 2048
 
 SYSTEM_PROMPT_VOICE_ENGLISH = (
     "You are a voice assistant. "
@@ -26,11 +26,3 @@ SYSTEM_PROMPT_CODE_HUNGARIAN = (
     "A te dolgod a programhibák felfedezése és kijavítása. "
     "Küldhetsz programkódot a válaszodban. "
 )
-
-RESOURCES_DIR = os.path.join(os.path.dirname(__file__), "resources")
-OLLAMA_MODEL = "llama3"
-TTS_VOICE_SPEED = 200
-TTS_VOICE_VOLUME = 1.0
-USER_INPUT_LANGUAGES = ["english", "hungarian"]
-SYSTEM_OUTPUT_LANGUAGES = ["english", "hungarian"]
-TOKEN_LIMIT = 2048

@@ -27,6 +27,8 @@ def test_ollama_in_hungarian():
     )
     print(response.message.content)
 
+
 #test_festival_service("Hello World")
 #test_settings_window()
-test_ollama_in_hungarian()
+#test_ollama_in_hungarian()
+print(FestivalService.get_festival_voices())

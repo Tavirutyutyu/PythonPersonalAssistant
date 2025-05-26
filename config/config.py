@@ -1,18 +1,18 @@
 import json
 import os
 
-from configuration import SYSTEM_PROMPT_VOICE_ENGLISH, SYSTEM_PROMPT_CODE_ENGLISH, SYSTEM_PROMPT_VOICE_HUNGARIAN, SYSTEM_PROMPT_CODE_HUNGARIAN
-from voice.tts_service import FestivalService
+from config import SYSTEM_PROMPT_VOICE_ENGLISH, SYSTEM_PROMPT_CODE_ENGLISH, SYSTEM_PROMPT_VOICE_HUNGARIAN, SYSTEM_PROMPT_CODE_HUNGARIAN
 
 
 class Configuration:
-    RESOURCES_DIR = os.path.join(os.path.dirname(__file__), "resources")
+    PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    RESOURCES_DIR = os.path.join(PROJECT_ROOT, "resources")
     OLLAMA_MODEL = "llama3"
     TOKEN_LIMIT = 2048
 
     TTS = {
         "voice_speed": 200,
-        "voice_model": FestivalService.get_festival_voices()[0],
+        "voice_model": "kal_diphone",
     }
 
     USER_INPUT_LANGUAGES = ["english", "hungarian"]
@@ -31,16 +31,16 @@ class Configuration:
 
     SETTINGS_FILE = os.path.join(RESOURCES_DIR, "settings.json")
 
-    ACTIVE_LANGUAGE = "english"
+    active_language = "english"
 
     @classmethod
     def get_system_prompt(cls, mode):
-        return cls.SYSTEM_PROMPTS[cls.ACTIVE_LANGUAGE][mode]
+        return cls.SYSTEM_PROMPTS[cls.active_language][mode]
 
     @classmethod
     def set_language(cls, lang: str):
         if lang in cls.USER_INPUT_LANGUAGES:
-            cls.ACTIVE_LANGUAGE = lang
+            cls.active_language = lang
         else:
             raise ValueError(f"Language '{lang}' is not supported.")
 
@@ -59,7 +59,7 @@ class Configuration:
             "TTS": cls.TTS,
             "USER_INPUT_LANGUAGES": cls.USER_INPUT_LANGUAGES,
             "SYSTEM_OUTPUT_LANGUAGES": cls.SYSTEM_OUTPUT_LANGUAGES,
-            "ACTIVE_LANGUAGE": cls.ACTIVE_LANGUAGE
+            "ACTIVE_LANGUAGE": cls.active_language
         }
         with open(cls.SETTINGS_FILE, "w", encoding="utf-8") as f:
             json.dump(data, f, indent=2)
@@ -74,6 +74,6 @@ class Configuration:
                 cls.TTS = data.get("TTS", cls.TTS)
                 cls.USER_INPUT_LANGUAGES = data.get("USER_INPUT_LANGUAGES", cls.USER_INPUT_LANGUAGES)
                 cls.SYSTEM_OUTPUT_LANGUAGES = data.get("SYSTEM_OUTPUT_LANGUAGES", cls.SYSTEM_OUTPUT_LANGUAGES)
-                cls.ACTIVE_LANGUAGE = data.get("ACTIVE_LANGUAGE", cls.ACTIVE_LANGUAGE)
+                cls.active_language = data.get("ACTIVE_LANGUAGE", cls.active_language)
         except FileNotFoundError:
             cls.save()

@@ -1,7 +1,7 @@
 import subprocess
 from abc import ABC, abstractmethod
 
-from configuration import Configuration
+from config.config import Configuration
 from utils import combine_documents, FileLoader, DocumentLoader
 
 

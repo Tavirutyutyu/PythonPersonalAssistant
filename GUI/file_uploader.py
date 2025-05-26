@@ -13,6 +13,7 @@ class FileUploader(Toplevel):
         self.total_tokens = 0
 
         self.token_label = Label(self, text=f"Used {self.total_tokens} / {TOKEN_LIMIT} tokens")
+        #self.token_label = Label(self, text=f"Used {self.total_tokens} / {Configuration.TOKEN_LIMIT} tokens")
         self.listbox = Listbox(self, width=80, height=15)
         self.add_button = Button(self, text="Add files", command=self.add_files)
         self.remove_button = Button(self, text="Remove Selected", command=self.remove_selected)

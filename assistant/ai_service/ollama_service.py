@@ -11,7 +11,7 @@ from pathlib import Path
 import ollama
 
 from assistant.ai_service.ai_service import AIService
-from configuration import Configuration
+from config.config import Configuration
 
 
 class OllamaService(AIService, ABC):

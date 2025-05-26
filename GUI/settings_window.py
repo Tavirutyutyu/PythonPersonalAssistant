@@ -1,6 +1,6 @@
 from tkinter import Toplevel, ttk, Label, Button
 
-from config import USER_INPUT_LANGUAGES, SYSTEM_OUTPUT_LANGUAGES
+from config.config import Configuration
 from voice.tts_service import FestivalService
 
 
@@ -13,11 +13,11 @@ class SettingsWindow(Toplevel):
         self.voice_model_dropdown = ttk.Combobox(self, values=self.voice_model_options, state="readonly")
         self.voice_model_dropdown.set(self.voice_model_options[0])
         self.user_language_dropdown_label = Label(self, text="Language: ")
-        self.user_language_dropdown = ttk.Combobox(self, values=USER_INPUT_LANGUAGES, state="readonly")
-        self.user_language_dropdown.set(USER_INPUT_LANGUAGES[0])
+        self.user_language_dropdown = ttk.Combobox(self, values=Configuration.USER_INPUT_LANGUAGES, state="readonly")
+        self.user_language_dropdown.set(Configuration.USER_INPUT_LANGUAGES[0])
         self.system_language_dropdown_label = Label(self, text="Language: ")
-        self.system_language_dropdown = ttk.Combobox(self, values=SYSTEM_OUTPUT_LANGUAGES,state="readonly")
-        self.system_language_dropdown.set(SYSTEM_OUTPUT_LANGUAGES[0])
+        self.system_language_dropdown = ttk.Combobox(self, values=Configuration.SYSTEM_OUTPUT_LANGUAGES,state="readonly")
+        self.system_language_dropdown.set(Configuration.SYSTEM_OUTPUT_LANGUAGES[0])
         self.submit_button = Button(self, text="Submit", command=self.submit)
         self.withdraw()
         

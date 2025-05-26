@@ -1,13 +1,13 @@
 import os
 from abc import ABC, abstractmethod
 
-from config import RESOURCES_DIR
+from config.config import Configuration
 from utils import JsonLoader
 from utils import FileLoader
 
 
 class Command(ABC):
-    def __init__(self, name: str, file_name: str, directory_path: str = RESOURCES_DIR, ) -> None:
+    def __init__(self, name: str, file_name: str, directory_path: str = Configuration.RESOURCES_DIR, ) -> None:
         """
         You need to provide a file that contains the command's keywords and if needed than sub options.
         For example keywords: open browser, browse, firefox...
