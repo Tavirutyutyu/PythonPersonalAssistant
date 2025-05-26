@@ -1,7 +1,7 @@
 import subprocess
 from abc import ABC, abstractmethod
 
-from config import SYSTEM_PROMPT_VOICE, SYSTEM_PROMPT_CODE
+from configuration import Configuration
 from utils import combine_documents, FileLoader, DocumentLoader
 
 
@@ -40,9 +40,9 @@ class AIService(ABC):
         """Turn message history into a dictionary or JSON format for the AI to understand."""
         formatted_messages = []
         if mode == "assistant":
-            formatted_messages.append({"role": "system", "content": SYSTEM_PROMPT_VOICE})
+            formatted_messages.append({"role": "system", "content": Configuration.get_system_prompt("voice")})
         elif mode == "code":
-            formatted_messages.append({"role": "system", "content": SYSTEM_PROMPT_CODE})
+            formatted_messages.append({"role": "system", "content": Configuration.get_system_prompt("code")})
             file_list = self.document_loader.load_files(uploaded_file_paths)
             files = combine_documents(file_list)
             formatted_messages.append({"role": "system", "content": files})
