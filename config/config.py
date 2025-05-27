@@ -45,7 +45,7 @@ class Configuration:
             raise ValueError(f"Language '{lang}' is not supported.")
 
     @classmethod
-    def update_tts(cls, speed:int | None = None, voice:str | None = None):
+    def update_tts(cls, speed:float | None = None, voice:str | None = None):
         if speed:
             cls.TTS["voice_speed"] = speed
         if voice:
