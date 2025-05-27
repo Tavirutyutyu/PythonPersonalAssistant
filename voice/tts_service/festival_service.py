@@ -26,18 +26,16 @@ class FestivalService(TtsService):
         else:
             print("Unsupported os")
 
+
     def say(self, text):
+        #TODO come up with a better way of handling speed and voice_model. Use the set_voice_property from config.py
         speed = Configuration.TTS["voice_speed"]
         voice_model = Configuration.TTS["voice_model"]
         scheme_script = ""
-        if self.voice is not None:
-            print(f"{voice_model=}")
-            scheme_script += f"(voice_{voice_model})\n"
-        if self.speed is not None:
-            scheme_script += f"(Parameter.set 'Duration_Stretch {self.speed})\n"
+        scheme_script += f"(voice_{voice_model})\n"
+        scheme_script += f"(Parameter.set 'Duration_Stretch {speed})\n"
         scheme_script += f'(SayText "{text}")\n(quit)'
         subprocess.run(["festival", "--pipe"], input=scheme_script.encode(), check=True)
-
 
     def set_voice_property(self, speed: float = None, voice: str = None) -> None:
         if voice:

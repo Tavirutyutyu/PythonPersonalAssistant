@@ -1,6 +1,7 @@
 from tkinter import scrolledtext, WORD, Entry, END, Frame, Button, StringVar, BooleanVar, font
 
 from assistant import Assistant
+from config import Configuration
 from utils import threaded
 
 
@@ -8,12 +9,12 @@ class AIChatBox(Frame):
     def __init__(self, root, assistant: Assistant, master=None, **kwargs):
         super().__init__(master, **kwargs)
         self.assistant = assistant
-
         self.root = root
-        #self.root.title("Chat Box")
-        self.chat_font = font.Font(family="Courier", size=12)
+
+        font_size = Configuration.get_font_size()
+
+        self.chat_font = font.Font(family="Courier", size=font_size)
         self.chat_display = scrolledtext.ScrolledText(self, wrap=WORD, state="disabled", font=self.chat_font)
-        #self.chat_display.grid(row=0, column=0, columnspan=2, padx=10, pady=10)
         self.chat_display.grid(row=0, column=0, columnspan=2, padx=10, pady=10, sticky="nsew")
 
         self.input_container = Frame(self)
@@ -42,6 +43,7 @@ class AIChatBox(Frame):
 
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
+        Configuration.on_change("font_size", self.change_font_size)
 
     def change_font_size(self, size: int):
         self.chat_font.configure(size=size)

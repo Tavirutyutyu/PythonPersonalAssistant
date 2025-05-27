@@ -46,7 +46,8 @@ class SettingsWindow(Toplevel):
             Configuration.update_tts(voice=voice_model)
         if voice_speed:
             Configuration.update_tts(speed=float(voice_speed))
-
+        if font_size:
+            Configuration.set_font_size(int(font_size))
 
         print(f"{voice_model=}")
         print(f"{voice_speed=}")

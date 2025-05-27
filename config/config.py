@@ -33,6 +33,29 @@ class Configuration:
 
     active_language = "english"
 
+    _font_size = 12
+    _observers = {}
+
+    @classmethod
+    def set_font_size(cls, size: int):
+        cls._font_size = size
+        cls._notify("font_size", size)
+
+    @classmethod
+    def get_font_size(cls):
+        return cls._font_size
+
+    @classmethod
+    def on_change(cls, key:str, callback):
+        if key not in cls._observers:
+            cls._observers[key] = []
+        cls._observers[key].append(callback)
+
+    @classmethod
+    def _notify(cls, key: str, value):
+        for callback in cls._observers.get(key, []):
+            callback(value)
+
     @classmethod
     def get_system_prompt(cls, mode):
         return cls.SYSTEM_PROMPTS[cls.active_language][mode]
