@@ -1,0 +1,16 @@
+{
+  "OLLAMA_MODEL": "llama3",
+  "TOKEN_LIMIT": 2048,
+  "TTS": {
+    "voice_speed": 200,
+    "voice_volume": 1.0
+  },
+  "USER_INPUT_LANGUAGES": [
+    "english",
+    "hungarian"
+  ],
+  "SYSTEM_OUTPUT_LANGUAGES": [
+    "english",
+    "hungarian"
+  ]
+}

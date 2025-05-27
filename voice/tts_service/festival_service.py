@@ -3,13 +3,14 @@ import shutil
 import subprocess
 from pathlib import Path
 
+from config import Configuration
 from voice.tts_service.tts_service import TtsService
 
 
 class FestivalService(TtsService):
     def __init__(self):
-        self.speed = None
-        self.voice = None
+        self.speed = Configuration.TTS["voice_speed"]
+        self.voice = Configuration.TTS["voice_model"]
 
     def check_install(self):
         return shutil.which("festival") is not None
@@ -26,9 +27,12 @@ class FestivalService(TtsService):
             print("Unsupported os")
 
     def say(self, text):
+        speed = Configuration.TTS["voice_speed"]
+        voice_model = Configuration.TTS["voice_model"]
         scheme_script = ""
         if self.voice is not None:
-            scheme_script += f"({self.voice})\n"
+            print(f"{voice_model=}")
+            scheme_script += f"(voice_{voice_model})\n"
         if self.speed is not None:
             scheme_script += f"(Parameter.set 'Duration_Stretch {self.speed})\n"
         scheme_script += f'(SayText "{text}")\n(quit)'
@@ -42,6 +46,9 @@ class FestivalService(TtsService):
             duration_stretch = 1.0 / speed if speed != 0 else 1.0
             self.speed = duration_stretch
 
+    def calculate_speed(self, speed):
+        duration_stretch = 1.0 / speed if speed != 0 else 1.0
+        self.speed = duration_stretch
 
     @staticmethod
     def get_festival_voices():

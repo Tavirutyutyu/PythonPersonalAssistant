@@ -11,7 +11,7 @@ from pathlib import Path
 import ollama
 
 from assistant.ai_service.ai_service import AIService
-from config import OLLAMA_MODEL
+from config.config import Configuration
 
 
 class OllamaService(AIService, ABC):
@@ -21,7 +21,7 @@ class OllamaService(AIService, ABC):
         full_prompt = self._format_prompt(self._message_history, mode=mode, uploaded_file_paths=uploaded_file_paths)
         try:
             print(f"{full_prompt=}")
-            response = ollama.chat(model=OLLAMA_MODEL, messages=full_prompt)
+            response = ollama.chat(model=Configuration.OLLAMA_MODEL, messages=full_prompt)
             self._message_history.append(dict(role="assistant", content=response.message.content))
             return response.message.content
         except ollama.ResponseError as e:

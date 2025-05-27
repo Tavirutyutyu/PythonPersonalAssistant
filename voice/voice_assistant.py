@@ -1,6 +1,6 @@
 from typing import Callable
 
-from config import TTS_VOICE_SPEED
+from config.config import Configuration
 from .listener import Listener
 from voice.tts_service import TtsManager
 from voice.tts_service import TtsService
@@ -12,7 +12,7 @@ class VoiceAssistant:
         self.__tts_engine: TtsService = TtsManager.get_installed_service()
         self.listener = Listener()
 
-    def set_voice_properties(self, rate:float=TTS_VOICE_SPEED, voice:str = None) -> None:
+    def set_voice_properties(self, rate:float=Configuration.TTS["voice_speed"], voice:str = None) -> None:
         """
         You can set the speed of the tts model, or the used voice model.
         The speed has to be a float number. 1.0 is the default speed.
