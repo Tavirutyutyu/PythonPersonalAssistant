@@ -10,10 +10,11 @@ class AIChatBox(Frame):
         self.assistant = assistant
 
         self.root = root
-        self.root.title("Chat Box")
+        #self.root.title("Chat Box")
 
         self.chat_display = scrolledtext.ScrolledText(self, wrap=WORD, state="disabled")
-        self.chat_display.grid(row=0, column=0, columnspan=2, padx=10, pady=10)
+        #self.chat_display.grid(row=0, column=0, columnspan=2, padx=10, pady=10)
+        self.chat_display.grid(row=0, column=0, columnspan=2, padx=10, pady=10, sticky="nsew")
 
         self.input_container = Frame(self)
         self.input_container.grid(row=1, column=0, columnspan=2, padx=10, pady=(0, 10), sticky="ew")
@@ -38,6 +39,9 @@ class AIChatBox(Frame):
         self.__entry_point = None
 
         self.uploaded_file_paths = []
+
+        self.grid_rowconfigure(0, weight=1)
+        self.grid_columnconfigure(0, weight=1)
 
     @threaded
     def __voice_mode(self):
