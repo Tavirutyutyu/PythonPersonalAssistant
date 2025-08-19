@@ -27,7 +27,6 @@ class OllamaService(AIService, ABC):
         except ollama.ResponseError as e:
             print(f"Error: {e.error}")
 
-
     def check_install(self):
         ollama_installed = shutil.which("ollama") is not None
         llama3_model_path = Path.home() / ".ollama" / "models" / "manifests" / "registry.ollama.ai" / "library" / "llama3" / "latest"
@@ -64,7 +63,7 @@ class OllamaService(AIService, ABC):
 
     @staticmethod
     def __install_linux():
-        script_path = Path(__file__).resolve().parents[2] / "installers" / "install_ollama.sh"
+        script_path = Path(__file__).resolve().parents[2] / "installers" / "linux" / "install_ollama.sh"
         try:
             subprocess.run(["bash", str(script_path)], check=True)
         except subprocess.CalledProcessError as e:
@@ -80,4 +79,9 @@ class OllamaService(AIService, ABC):
 
     @staticmethod
     def __install_mac():
-        subprocess.run(["brew", "install", "ollama"])
+        script_path = Path(__file__).resolve().parents[2] / "installers" / "mac" / "install_ollama.sh"
+        try:
+            subprocess.run(["bash", str(script_path)], check=True)
+        except subprocess.CalledProcessError as e:
+            print(f"Failed to install Ollama: {e}")
+

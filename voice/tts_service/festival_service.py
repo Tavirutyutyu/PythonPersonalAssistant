@@ -70,25 +70,19 @@ class FestivalService(TtsService):
                 return line.removeprefix("festival> ").strip("()").split()
         return []
 
-
     @staticmethod
     def install_windows():
         print("Festival is not officially supported on Windows.")
         print("Consider using another TTS engine like pyttsx3 or install WSL (Linux on Windows) to use Festival.")
 
-
     @staticmethod
     def install_linux():
-        script_path = Path(__file__).resolve().parents[0] / "installers" / "install_festival_tts.sh"
+        script_path = Path(__file__).resolve().parents[0] / "installers" / "linux" / "install_festival_tts.sh"
         try:
             subprocess.run(["bash", str(script_path)], check=True)
         except subprocess.CalledProcessError as e:
             print(f"Failed to install Ollama: {e}")
 
-
     @staticmethod
     def install_mac():
-        if shutil.which("brew"):
-            subprocess.run(["brew", "install", "festival"])
-        else:
-            print("Homebrew is not installed. Please install it and rerun.")
+        script_path = Path(__file__).resolve().parents[0] / "installers" / "mac" / "install_festival_tts.sh"
