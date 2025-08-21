@@ -43,7 +43,7 @@ class SettingsWindow(Toplevel):
         font_size = self.font_size_input.get()
 
         if voice_model:
-            Configuration.update_tts(voice=voice_model)
+                Configuration.update_tts(voice=voice_model)
         if voice_speed:
             Configuration.update_tts(speed=float(voice_speed))
         if font_size:

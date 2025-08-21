@@ -1,9 +1,10 @@
 from . import FestivalService
 from . import TtsService
+from .pytts3_service import Pytts3Service
 
 
 class TtsManager:
-    services: list[TtsService] = [FestivalService()]
+    services: list[TtsService] = [Pytts3Service(), FestivalService()]
 
     @classmethod
     def get_installed_service(cls) -> TtsService:
