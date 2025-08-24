@@ -24,5 +24,11 @@ else
   echo "Python 3.12 already installed."
 fi
 
-echo "Verifying Tkinter..."
-python3.12 -m tkinter || echo "Tkinter test failed."
+python3.12 - <<'EOF'
+try:
+    import tkinter
+    print("Tkinter is available.")
+except ImportError:
+    print("Tkinter is NOT available.")
+EOF
+
