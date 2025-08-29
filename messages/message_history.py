@@ -52,5 +52,8 @@ class MessageHistory:
     def get_messages_as_json_string(self):
         return [message.get_as_dict() for message in self._message_history]
 
+    def get_last_ai_message(self):
+        return self._assistant_message_history[-1]
+
     def __str__(self):
         return ", ".join(map(lambda message: str(message), self._message_history))

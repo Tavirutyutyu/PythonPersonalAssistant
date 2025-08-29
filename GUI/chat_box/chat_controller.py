@@ -24,10 +24,7 @@ class ChatController(Frame):
         self.user_input.bind("<Return>", self.__on_enter)
 
         self.voice_mode_button_label = StringVar(value="Enter Voice Command")
-        self.voice_mode_button = Button(
-            self.input_container, textvariable=self.voice_mode_button_label,
-            command=self.__voice_mode
-        )
+        self.voice_mode_button = Button(self.input_container, textvariable=self.voice_mode_button_label, command=self.__voice_mode)
         self.voice_mode_button.grid(row=0, column=1, padx=(5, 0))
 
         self.input_container.columnconfigure(0, weight=1)
@@ -70,14 +67,14 @@ class ChatController(Frame):
 
     @threaded
     def __voice_mode(self):
-        voice_input = self.assistant.listen(self.chat_display.display_message)
-        self.chat_display.display_message("You", voice_input)
+        voice_input = self.assistant.listen(self.safe_display_message)
+        self.safe_display_message("You", voice_input)
         self.__handle_ai_response(voice_input, voice_on=True)
 
     def __on_enter(self, event):
         msg = self.user_input.get().strip()
         if msg:
-            self.chat_display.display_message("You", msg)
+            self.safe_display_message("You", msg)
             self.user_input.delete(0, END)
             self.cancel_event.clear()
             self.__handle_ai_response(msg)
@@ -86,7 +83,7 @@ class ChatController(Frame):
         if self.cancel_event.is_set():
             print("Canceled by user Before ai response")
             return
-        self.chat_display.display_message("Assistant", "...")
+        self.safe_display_message("Assistant", "...")
         self.__generate_ai_response(prompt, voice_on)
 
     @threaded

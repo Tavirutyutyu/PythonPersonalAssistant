@@ -12,39 +12,24 @@ import ollama
 
 from assistant.ai_service.ai_service import AIService
 from config.config import Configuration
-from messages.message import Message
 
 
 class OllamaService(AIService):
 
     def generate_answer(self, prompt: str, cancel_event: Event, mode: str = "normal", uploaded_file_paths: list | None = None):
-        if cancel_event.is_set():
-            print("OllamaService canceled before start.")
-            return None
-
-        user_prompt = Message(role="user", message=prompt)
-        self._message_history.add_message(user_prompt)
-
-        full_prompt = self._format_prompt(mode=mode, uploaded_file_paths=uploaded_file_paths)
-
-        print(f"{full_prompt=}")
-
-        ai_message = Message(role="assistant", message="...")
-        self._message_history.add_message(ai_message)
-
+        if cancel_event.is_set(): return None
+        full_prompt = self._prepare_prompt(prompt, mode)
+        ai_message = self._message_history.get_last_ai_message()
         try:
             response_text = ""
             for chunk in ollama.chat(model=Configuration.OLLAMA_MODEL, messages=full_prompt, stream=True):
                 if cancel_event.is_set():
-                    print("OllamaService canceled mid-generation.")
                     self._message_history.remove_message(ai_message.ID)
                     return None
                 response_text += chunk["message"]["content"]
-
             ai_message.set_message(response_text)
             self._message_history.update_message(ai_message.ID, ai_message.get_message())
             return response_text
-
         except ollama.ResponseError as e:
             print(f"Error: {e}")
 
@@ -105,4 +90,3 @@ class OllamaService(AIService):
             subprocess.run(["bash", str(script_path)], check=True)
         except subprocess.CalledProcessError as e:
             print(f"Failed to install Ollama: {e}")
-

@@ -1,7 +1,6 @@
 import sys
 from tkinter import Button, ttk, Frame
 
-# from GUI.chat_box import AIChatBox
 from GUI.chat_box.chat_controller import ChatController
 from GUI.file_uploader import FileUploader
 from GUI.settings_window import SettingsWindow
@@ -13,20 +12,15 @@ class Layout:
         self.window = window
         self.left_frame = Frame(window)
         self.right_frame = Frame(window)
-        # self.chat_box = AIChatBox(self.left_frame, assistant)
         self.chat_box = ChatController(self.left_frame, assistant)
         self.file_uploader = FileUploader(uploaded_files=self.chat_box.uploaded_file_paths)
         self.settings_window = SettingsWindow(window)
         self.chat_box.safe_display_message("Assistant", "Welcome!")
         self.correct_prompt_button = Button(self.right_frame, text="Correct Prompt", command=self.correct_prompt)
-        self.stop_ai_answer_generation_button = Button(self.right_frame, text="Stop AI Answer Generation",
-                                                       command=self.stop_ai_answer)
+        self.stop_ai_answer_generation_button = Button(self.right_frame, text="Stop AI Answer Generation", command=self.stop_ai_answer)
         self.upload_files_button = Button(self.right_frame, text="Upload New Files", command=self.upload_files)
-        self.clear_files_button = Button(self.right_frame, text="Clear Uploaded Files",
-                                         command=self.clear_uploaded_files)
-        self.coding_buddy_checkbutton = ttk.Checkbutton(self.right_frame, text="Coding Buddy Mode",
-                                                        variable=self.chat_box.coding_buddy_mode,
-                                                        command=self.coding_buddy_mode)
+        self.clear_files_button = Button(self.right_frame, text="Clear Uploaded Files", command=self.clear_uploaded_files)
+        self.coding_buddy_checkbutton = ttk.Checkbutton(self.right_frame, text="Coding Buddy Mode", variable=self.chat_box.coding_buddy_mode, command=self.coding_buddy_mode)
         self.settings_button = Button(self.right_frame, text="Settings", command=self.open_settings)
         self.exit_button = Button(self.right_frame, text="Exit", command=self.exit)
 
@@ -53,12 +47,6 @@ class Layout:
             if files:
                 self.chat_box.toggle_coding_buddy_mode(uploaded_file_paths=files)
 
-    def remove_from_grid(self):
-        self.chat_box.grid_forget()
-        self.correct_prompt_button.grid_forget()
-        self.stop_ai_answer_generation_button.grid_forget()
-        self.exit_button.grid_forget()
-
     def stop_ai_answer(self):
         self.chat_box.cancel_ai_response()
 
@@ -73,7 +61,6 @@ class Layout:
         self.left_frame.rowconfigure(0, weight=1)
 
         self.chat_box.grid(column=0, row=0, sticky="nsew")
-
         self.correct_prompt_button.grid(column=0, row=0, sticky="ew", pady=2)
         self.stop_ai_answer_generation_button.grid(column=0, row=1, sticky="ew", pady=2)
         self.upload_files_button.grid(column=0, row=2, sticky="ew", pady=2)

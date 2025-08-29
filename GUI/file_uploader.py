@@ -6,14 +6,13 @@ from transformers import LlamaTokenizer
 class FileUploader(Toplevel):
     def __init__(self, master=None, uploaded_files=None):
         super().__init__(master)
-        self.withdraw()  # Start hidden
+        self.withdraw()
         self.title("File Uploader")
         self.geometry("600x400")
         self.uploaded_files = uploaded_files
         self.total_tokens = 0
 
         self.token_label = Label(self, text=f"Used {self.total_tokens} / {TOKEN_LIMIT} tokens")
-        #self.token_label = Label(self, text=f"Used {self.total_tokens} / {Configuration.TOKEN_LIMIT} tokens")
         self.listbox = Listbox(self, width=80, height=15)
         self.add_button = Button(self, text="Add files", command=self.add_files)
         self.remove_button = Button(self, text="Remove Selected", command=self.remove_selected)
@@ -75,7 +74,8 @@ class FileUploader(Toplevel):
     def update_token_label(self):
         self.token_label.config(text=f"Used: {self.total_tokens} / {TOKEN_LIMIT} tokens")
 
-    def count_tokens(self, text):
+    @staticmethod
+    def count_tokens(text):
         tokenizer = LlamaTokenizer.from_pretrained("meta-llama/Llama-3B-hf")
         tokens = tokenizer.encode(text)
         return len(tokens)
