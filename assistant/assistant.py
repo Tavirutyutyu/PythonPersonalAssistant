@@ -136,9 +136,3 @@ class Assistant:
 
     def clear_last_user_message(self):
         self.ai_service.clear_last_user_message()
-
-    def add_message(self, message: Message):
-        self.ai_service.add_message(message)
-
-    def del_last_two(self):
-        self.ai_service.del_last_two()

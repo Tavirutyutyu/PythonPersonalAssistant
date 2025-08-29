@@ -17,19 +17,19 @@ from messages.message import Message
 
 class OllamaService(AIService):
 
-    def generate_answer(self, prompt: str, cancel_event: Event, mode: str = "normal",
-                        uploaded_file_paths: list | None = None):
+    def generate_answer(self, prompt: str, cancel_event: Event, mode: str = "normal", uploaded_file_paths: list | None = None):
         if cancel_event.is_set():
             print("OllamaService canceled before start.")
             return None
 
         user_prompt = Message(role="user", message=prompt)
         self._message_history.add_message(user_prompt)
+
         full_prompt = self._format_prompt(mode=mode, uploaded_file_paths=uploaded_file_paths)
 
         print(f"{full_prompt=}")
 
-        ai_message = Message(role="ai", message="")
+        ai_message = Message(role="assistant", message="...")
         self._message_history.add_message(ai_message)
 
         try:

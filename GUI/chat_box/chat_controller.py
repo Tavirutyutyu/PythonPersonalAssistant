@@ -32,20 +32,18 @@ class ChatController(Frame):
 
         self.input_container.columnconfigure(0, weight=1)
 
-        self.cancel_request = False
+        self.cancel_event = threading.Event()
         self.coding_buddy_mode = BooleanVar(value=False)
         self.uploaded_file_paths = []
 
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
 
-        self.cancel_event = threading.Event()
 
     def safe_display_message(self, sender, message):
         self.root.after(0, lambda: self.chat_display.display_message(sender, message))
 
     def cancel_ai_response(self):
-        # self.cancel_request = True
         self.cancel_event.set()
         self.chat_display.clear_last_ai_response()
         self.assistant.clear_last_ai_message()
@@ -54,13 +52,13 @@ class ChatController(Frame):
         self.cancel_ai_response()
         last_prompt = self.chat_display.last_user_prompt()
         self.chat_display.clear_last_user_prompt()
-        self.assistant.del_last_two()
+        self.assistant.clear_last_user_message()
         if last_prompt:
             self.user_input.delete(0, END)
             self.user_input.insert(0, last_prompt)
             self.user_input.focus_set()
 
-    def toggle_coding_buddy_mode(self, folder_path=None, uploaded_file_paths=None):
+    def toggle_coding_buddy_mode(self, uploaded_file_paths=None):
         if uploaded_file_paths:
             self.uploaded_file_paths.extend(uploaded_file_paths)
 
@@ -81,7 +79,6 @@ class ChatController(Frame):
         if msg:
             self.chat_display.display_message("You", msg)
             self.user_input.delete(0, END)
-            # self.cancel_request = False
             self.cancel_event.clear()
             self.__handle_ai_response(msg)
 

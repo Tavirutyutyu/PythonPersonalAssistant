@@ -41,17 +41,24 @@ class AIService(ABC):
 
     def _format_prompt(self, mode:str = "normal", uploaded_file_paths: list | None = None) -> list[dict[str, str]]:
         """Turn message history into a dictionary or JSON format for the AI to understand."""
-        return [{"role": "system", "content": Configuration.get_system_prompt(mode)}, *self._message_history.get_messages_as_json_string()]
+        full_prompt = [{"role": "system", "content": Configuration.get_system_prompt(mode)}, *self._message_history.get_messages_as_json_string()]
+        if mode == "code":
+            file_list = self.document_loader.load_files(uploaded_file_paths)
+            files = combine_documents(file_list)
+            full_prompt.append({"role": "system", "content": files})
+        return full_prompt
 
-    def add_message(self, message: Message):
-        self._message_history.add_message(message)
+    def _prepare_prompt(self, prompt:str, mode:str = "normal") -> list[dict[str, str]]:
+        user_message = Message(role="user", message=prompt)
+        self._message_history.add_message(user_message)
+        full_prompt = self._format_prompt(mode = mode)
+        ai_message = Message(role="assistant", message="...")
+        self._message_history.add_message(ai_message)
+        return full_prompt
 
     def clear_last_ai_message(self):
         self._message_history.remove_last_ai_message()
 
     def clear_last_user_message(self):
         self._message_history.remove_last_user_message()
-
-    def del_last_two(self):
-        self._message_history.del_last_two()
 

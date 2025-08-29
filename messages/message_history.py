@@ -3,10 +3,10 @@ from messages.message import Message
 
 class MessageHistory:
     def __init__(self):
-        self._message_history : list[Message] = []
-        self._assistant_message_history : list[Message] = []
-        self._user_message_history : list[Message] = []
-        self._system_message_history : list[Message] = []
+        self._message_history: list[Message] = []
+        self._assistant_message_history: list[Message] = []
+        self._user_message_history: list[Message] = []
+        self._system_message_history: list[Message] = []
 
         self.last_ai_message_id = None
 
@@ -38,10 +38,8 @@ class MessageHistory:
         self._system_message_history = system_message_history
 
     def remove_last_ai_message(self):
-        print(f"{self._assistant_message_history=}")
-        if len(self._assistant_message_history) > 0:
-            last_ai_message = self._assistant_message_history.pop()
-            self._message_history.remove(last_ai_message)
+        last_ai_message = self._assistant_message_history.pop()
+        self._message_history.remove(last_ai_message)
 
     def remove_last_user_message(self):
         last_user_message = self._user_message_history.pop()
@@ -49,17 +47,10 @@ class MessageHistory:
 
     def remove_last_system_message(self):
         last_system_message = self._system_message_history.pop()
-        self._system_message_history.remove(last_system_message)
-
-    def get_last_ai_message_id(self):
-        return self._assistant_message_history[-1].ID
+        self._message_history.remove(last_system_message)
 
     def get_messages_as_json_string(self):
         return [message.get_as_dict() for message in self._message_history]
-
-    def del_last_two(self):
-        self._message_history.pop()
-        self._message_history.pop()
 
     def __str__(self):
         return ", ".join(map(lambda message: str(message), self._message_history))
