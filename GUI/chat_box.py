@@ -1,5 +1,4 @@
 from tkinter import scrolledtext, WORD, Entry, END, Frame, Button, StringVar, BooleanVar, font
-
 from assistant import Assistant
 from config import Configuration
 from utils import threaded
@@ -12,9 +11,11 @@ class AIChatBox(Frame):
         self.root = root
 
         font_size = Configuration.get_font_size()
-
         self.chat_font = font.Font(family="Courier", size=font_size)
-        self.chat_display = scrolledtext.ScrolledText(self, wrap=WORD, state="disabled", font=self.chat_font)
+
+        self.chat_display = scrolledtext.ScrolledText(
+            self, wrap=WORD, state="disabled", font=self.chat_font
+        )
         self.chat_display.grid(row=0, column=0, columnspan=2, padx=10, pady=10, sticky="nsew")
 
         self.input_container = Frame(self)
@@ -25,20 +26,19 @@ class AIChatBox(Frame):
         self.user_input.bind("<Return>", self.__on_enter)
 
         self.voice_mode_button_label = StringVar(value="Enter Voice Command")
-        self.voice_mode_button = Button(self.input_container, textvariable=self.voice_mode_button_label, command=self.__voice_mode)
+        self.voice_mode_button = Button(
+            self.input_container, textvariable=self.voice_mode_button_label,
+            command=self.__voice_mode
+        )
         self.voice_mode_button.grid(row=0, column=1, padx=(5, 0))
 
         self.input_container.columnconfigure(0, weight=1)
-        self._last_ai_msg_index = None
 
-        self._current_answer_future = None
         self.cancel_request = False
         self._last_user_prompt = None
+        self._last_ai_msg_index = None
 
         self.coding_buddy_mode = BooleanVar(value=False)
-        self.__coding_buddy_directory_path = None
-        self.__entry_point = None
-
         self.uploaded_file_paths = []
 
         self.grid_rowconfigure(0, weight=1)
@@ -48,52 +48,63 @@ class AIChatBox(Frame):
     def change_font_size(self, size: int):
         self.chat_font.configure(size=size)
 
-    @threaded
-    def __voice_mode(self):
-        voice_input = self.__listen()
-        self.__process_voice_input(voice_input)
+    def safe_display_message(self, sender, message):
+        self.root.after(0, lambda: self.display_message(sender, message))
 
-    def __listen(self):
-        voice_input = self.assistant.listen(self.display_message)
-        self.display_message("You", voice_input)
-        return voice_input
-
-    def __process_voice_input(self, voice_input):
-        command = self.assistant.match_command(voice_input)
-        if command:
-            if command.has_sub_options:
-                self.assistant.execute(command, self.display_message)
-            else:
-                command.execute()
-        else:
-            self.__handle_ai_response(voice_input, voice_on=True)
-
-    # Have to be public or the program crashes
     def display_message(self, sender, message):
         self.chat_display.configure(state="normal")
+
+        if "assistant_prefix" not in self.chat_display.tag_names():
+            self.chat_display.tag_config("assistant_prefix", foreground="red")
+            self.chat_display.tag_config("you_prefix", foreground="blue")
+            self.chat_display.tag_config("msg_text", foreground="black")
+
         if sender == "Assistant":
-            color = "red"
-            index = self.chat_display.index("end-1c")
-            self._last_ai_msg_index = index
+            prefix_tag = "assistant_prefix"
+            self._last_ai_msg_index = self.chat_display.index("end-1c")
         elif sender == "You":
-            color = "blue"
+            prefix_tag = "you_prefix"
+            self._last_user_prompt = message
         else:
-            color = "green"
+            prefix_tag = "msg_text"
 
-        if not color in self.chat_display.tag_names():
-            self.chat_display.tag_config(color, foreground=color)
-        if "black" not in self.chat_display.tag_names():
-            self.chat_display.tag_config("black", foreground="black")
+        self.chat_display.insert(END, f"{sender}: ", prefix_tag)
+        self.chat_display.insert(END, f"{message}\n", "msg_text")
 
-        self.chat_display.insert(END, f"{sender}: ", color)
-        self.chat_display.insert(END, f"{message}\n", "black")
         self.chat_display.configure(state="disabled")
         self.chat_display.yview(END)
+
+    def cancel_ai_response(self):
+        self.cancel_request = True
+        self.__clear_last_ai_response()
+
+    def correct_prompt(self):
+        self.cancel_ai_response()
+        if self._last_user_prompt:
+            self.user_input.delete(0, END)
+            self.user_input.insert(0, self._last_user_prompt)
+            self.user_input.focus_set()
+
+    def toggle_coding_buddy_mode(self, folder_path=None, uploaded_file_paths=None):
+        if uploaded_file_paths:
+            self.uploaded_file_paths.extend(uploaded_file_paths)
+
+    def upload_files(self, files):
+        self.uploaded_file_paths.extend(files)
+
+    def clear_uploaded_files(self):
+        self.uploaded_file_paths.clear()
+
+    @threaded
+    def __voice_mode(self):
+        voice_input = self.assistant.listen(self.safe_display_message)
+        self.safe_display_message("You", voice_input)
+        self.__handle_ai_response(voice_input, voice_on=True)
 
     def __on_enter(self, event):
         msg = self.user_input.get().strip()
         if msg:
-            self.display_message("You", msg)
+            self.safe_display_message("You", msg)
             self.user_input.delete(0, END)
             self.cancel_request = False
             self.__handle_ai_response(msg)
@@ -102,70 +113,34 @@ class AIChatBox(Frame):
         self._last_user_prompt = prompt
         if self.cancel_request:
             return
-        self.display_message("Assistant", "...")
+        self.safe_display_message("Assistant", "...")
         self.__generate_ai_response(prompt, voice_on)
 
+    
     @threaded
     def __generate_ai_response(self, prompt: str, voice_on: bool):
         if self.coding_buddy_mode.get():
-            print(self.uploaded_file_paths)
-            answer = self.assistant.generate_ai_answer(prompt, mode="code", uploaded_file_paths=self.uploaded_file_paths)
-            self.__display_ai_response(answer, voice_on)
+            answer = self.assistant.generate_ai_answer(
+                prompt, mode="code", uploaded_file_paths=self.uploaded_file_paths
+            )
         else:
             answer = self.assistant.generate_ai_answer(prompt)
-            self.__display_ai_response(answer, voice_on)
-        if self.cancel_request:
-            return
 
-    def cancel_ai_response(self):
-        self.cancel_request = True
-        self.__clear_last_ai_response()
+        if not self.cancel_request:
+            self.__update_ai_response(answer)
+            if voice_on:
+                self.assistant.speak(answer)
 
-    def correct_prompt(self):
-        self.cancel_ai_response()
-        last_prompt = self._last_user_prompt
-        if last_prompt:
-            self.__clear_last_user_prompt()
-            self.user_input.delete(0, END)
-            self.user_input.insert(0, last_prompt)
-            self.user_input.focus_set()
-
-    def toggle_coding_buddy_mode(self, folder_path: str | None = None,  uploaded_file_paths:list | None = None ):
-        self.__coding_buddy_directory_path = folder_path
-        self.uploaded_file_paths.extend(uploaded_file_paths)
-
-    def __display_ai_response(self, answer: str, voice_on: bool = False):
-        if self.cancel_request:
-            return
-        self.__update_ai_response(answer)
-        if voice_on:
-            self.assistant.speak(answer)
 
     def __clear_last_ai_response(self):
         if self._last_ai_msg_index:
-            print("Clearing...")
             self.chat_display.configure(state="normal")
             self.chat_display.delete(self._last_ai_msg_index, f"{self._last_ai_msg_index} +1line")
             self.chat_display.configure(state="disabled")
             self.chat_display.yview(END)
 
-    def __clear_last_user_prompt(self):
-        if self._last_user_prompt:
-            self.chat_display.configure(state="normal")
-            start_index = self.chat_display.search(f"You: {self._last_user_prompt}", "1.0", END)
-            if start_index:
-                self.chat_display.delete(start_index, f"{start_index} +1line")
-            self.chat_display.configure(state="disabled")
-            self.chat_display.yview(END)
-            self._last_user_prompt = None
-
-    def upload_files(self, files):
-        self.uploaded_file_paths.extend(files)
-
-    def clear_uploaded_files(self):
-        self.uploaded_file_paths.clear()
-
     def __update_ai_response(self, answer: str):
         self.__clear_last_ai_response()
-        self.display_message("Assistant", answer)
+        self.safe_display_message("Assistant", answer)
+
 

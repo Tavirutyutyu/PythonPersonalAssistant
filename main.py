@@ -6,9 +6,6 @@ from assistant import Assistant
 
 def main():
     window = Tk()
-    # window.lift()
-    # window.update()
-    # window.deiconify()
     assistant = Assistant()
     print("Hi")
     try:

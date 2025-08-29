@@ -20,11 +20,11 @@ class Configuration:
 
     SYSTEM_PROMPTS = {
         "english": {
-            "voice": SYSTEM_PROMPT_VOICE_ENGLISH,
+            "normal": SYSTEM_PROMPT_VOICE_ENGLISH,
             "code": SYSTEM_PROMPT_CODE_ENGLISH,
         },
         "hungarian": {
-            "voice": SYSTEM_PROMPT_VOICE_HUNGARIAN,
+            "normal": SYSTEM_PROMPT_VOICE_HUNGARIAN,
             "code": SYSTEM_PROMPT_CODE_HUNGARIAN,
         }
     }

@@ -1,13 +1,16 @@
 import subprocess
 from abc import ABC, abstractmethod
+from threading import Event
 
 from config.config import Configuration
+from messages.message import Message
+from messages.message_history import MessageHistory
 from utils import combine_documents, FileLoader, DocumentLoader
 
 
 class AIService(ABC):
     def __init__(self):
-        self._message_history = []
+        self._message_history = MessageHistory()
         self.document_loader: FileLoader = DocumentLoader()
         self._process: subprocess.Popen | None = None
 
@@ -28,7 +31,7 @@ class AIService(ABC):
         pass
 
     @abstractmethod
-    def generate_answer(self, prompt: str, mode: str = "assistant", uploaded_file_paths: list | None = None):
+    def generate_answer(self, prompt: str, cancel_event: Event, mode: str = "normal" ,uploaded_file_paths: list | None = None):
         pass
 
     def initialize(self):
@@ -36,20 +39,19 @@ class AIService(ABC):
             self.install()
         self.start()
 
-    def _format_prompt(self, messages: list[dict], mode: str = "assistant", uploaded_file_paths: list | None = None) ->  list[dict[str, str]]:
+    def _format_prompt(self, mode:str = "normal", uploaded_file_paths: list | None = None) -> list[dict[str, str]]:
         """Turn message history into a dictionary or JSON format for the AI to understand."""
-        formatted_messages = []
-        if mode == "assistant":
-            formatted_messages.append({"role": "system", "content": Configuration.get_system_prompt("voice")})
-        elif mode == "code":
-            formatted_messages.append({"role": "system", "content": Configuration.get_system_prompt("code")})
-            file_list = self.document_loader.load_files(uploaded_file_paths)
-            files = combine_documents(file_list)
-            formatted_messages.append({"role": "system", "content": files})
-        for message in messages:
-            role = message["role"]
-            content = message["content"]
-            formatted_messages.append({"role": role, "content": content})
-        return formatted_messages
+        return [{"role": "system", "content": Configuration.get_system_prompt(mode)}, *self._message_history.get_messages_as_json_string()]
 
+    def add_message(self, message: Message):
+        self._message_history.add_message(message)
+
+    def clear_last_ai_message(self):
+        self._message_history.remove_last_ai_message()
+
+    def clear_last_user_message(self):
+        self._message_history.remove_last_user_message()
+
+    def del_last_two(self):
+        self._message_history.del_last_two()
 
