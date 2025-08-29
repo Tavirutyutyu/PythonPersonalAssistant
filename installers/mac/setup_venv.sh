@@ -1,31 +1,54 @@
-#!/bin/bash
-set -e
+#!/usr/bin/env bash
+set -euo pipefail
 
-# Navigate to project root (PythonPersonalAssistant)
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PROJECT_ROOT="$(cd "$SCRIPT_DIR/../../.." && pwd)"
-cd "$PROJECT_ROOT"
+doc() { cat <<'DOC'
+project_root: Ascends to the project’s root (3 levels up).
+check_requirements: Ensures requirements.txt exists.
+remove_old_venv: Deletes .venv if already present.
+create_venv: Creates a new venv with python3.12.
+install_dependencies: Installs pip, requirements.txt.
+DOC
+}
 
-# Ensure we are in PythonPersonalAssistant
-if [ ! -f "requirements.txt" ]; then
-  echo "requirements.txt not found in $PROJECT_ROOT"
-  exit 1
-fi
+project_root() {
+  local script_dir project_root
+  script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+  project_root="$(cd "$script_dir/../../.." && pwd)"
+  cd "$project_root"
+}
 
-# Remove old virtual environment if present
-if [ -d ".venv" ]; then
-  echo "Removing existing .venv..."
-  rm -rf .venv
-fi
+check_requirements() {
+  if [ ! -f "requirements.txt" ]; then
+    echo "requirements.txt not found in $(pwd)"
+    exit 1
+  fi
+}
 
-# Create new virtual environment in project root
-echo "Creating new virtual environment..."
-python3.12 -m venv .venv
-source .venv/bin/activate
+remove_old_venv() {
+  if [ -d ".venv" ]; then
+    echo "Removing existing .venv..."
+    rm -rf .venv
+  fi
+}
 
-# Upgrade pip and install dependencies
-pip install --upgrade pip
-pip install -r requirements.txt
+create_venv() {
+  echo "Creating new virtual environment with python3.12..."
+  python3.12 -m venv .venv
+  source .venv/bin/activate
+}
+
+install_dependencies() {
+  echo "Upgrading pip and installing dependencies..."
+  pip install --upgrade pip
+  pip install -r requirements.txt
+}
+
+project_root
+check_requirements
+remove_old_venv
+create_venv
+install_dependencies
 
 echo "Virtual environment ready."
-echo "Run with: source .venv/bin/activate && python main.py"
+echo "Activate with: source .venv/bin/activate"
+echo "Run with: python main.py"
