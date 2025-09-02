@@ -1,5 +1,3 @@
-import time
-
 import pyttsx3
 
 from voice.tts_service import TtsService
@@ -8,6 +6,7 @@ from voice.tts_service import TtsService
 class Pytts3Service(TtsService):
     def __init__(self):
         self.engine = pyttsx3.init()
+        self.engine.setProperty("rate", 160)
 
     def check_install(self):
         return self.engine is not None
@@ -20,7 +19,7 @@ class Pytts3Service(TtsService):
         self.engine.runAndWait()
 
     def say_a_sentence(self, sentence):
-        for word in sentence.split(""):
+        for word in sentence.split(" "):
             self.engine.say(word)
             self.engine.runAndWait()
 

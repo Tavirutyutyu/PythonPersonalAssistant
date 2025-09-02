@@ -6,7 +6,6 @@ from assistant.ai_service import AIManager
 from assistant.ai_service.ai_service import AIService
 from commands import Command
 from commands import CommandManager
-from messages.message import Message
 from voice import VoiceAssistant
 
 
@@ -36,7 +35,8 @@ class Assistant:
         :param prompt: String to generate an AI answer for.
         :param mode: This toggles between assistant mode and coding buddy mode.
         :param uploaded_file_paths: Paths to files to upload.
-        read out and send the content of the files in the given directory so the ai can provide help.
+        :param cancel_event: If the cancel_event is set, we don't want to save and return the AI answer.
+        read out and send the content of the files in the given directory so the AI can provide help.
         :return: Returns the generated AI answer or None if something went wrong.
         """
         return self.ai_service.generate_answer(prompt, cancel_event, mode, uploaded_file_paths)
@@ -84,8 +84,7 @@ class Assistant:
         voice_option_input = self.__choose_option(options, message_displayer)
         self.__evaluate_sub_option_input(command, voice_option_input, message_displayer)
 
-    def __evaluate_sub_option_input(self, command: Command, sub_option_input: str,
-                                    message_displayer: Callable[[str, str], None]) -> None:
+    def __evaluate_sub_option_input(self, command: Command, sub_option_input: str, message_displayer: Callable[[str, str], None]) -> None:
         """
         Gets a command and a sub-option input.
         Then it checks if the sub-option input is valid.
@@ -124,10 +123,9 @@ class Assistant:
 
     def shutdown(self):
         """
-        shuts down the assistant and the local ai server.
+        shuts down the assistant and the local AI server.
         """
-        self.speak("Shutting down the assistant.")
-        self.speak("Good bye!")
+        self.speak("Shutting down the assistant Good Bye!")
         self.ai_service.stop()
         sys.exit()
 

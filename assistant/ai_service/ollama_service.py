@@ -18,7 +18,10 @@ class OllamaService(AIService):
 
     def generate_answer(self, prompt: str, cancel_event: Event, mode: str = "normal", uploaded_file_paths: list | None = None):
         if cancel_event.is_set(): return None
-        full_prompt = self._prepare_prompt(prompt, mode)
+        full_prompt = self._prepare_prompt(prompt, mode, uploaded_file_paths)
+
+        print(full_prompt)
+
         ai_message = self._message_history.get_last_ai_message()
         try:
             response_text = ""

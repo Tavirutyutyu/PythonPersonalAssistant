@@ -48,10 +48,10 @@ class AIService(ABC):
             full_prompt.append({"role": "system", "content": files})
         return full_prompt
 
-    def _prepare_prompt(self, prompt:str, mode:str = "normal") -> list[dict[str, str]]:
+    def _prepare_prompt(self, prompt:str, mode:str = "normal", uploaded_file_paths: list | None = None) -> list[dict[str, str]]:
         user_message = Message(role="user", message=prompt)
         self._message_history.add_message(user_message)
-        full_prompt = self._format_prompt(mode = mode)
+        full_prompt = self._format_prompt(mode = mode, uploaded_file_paths=uploaded_file_paths)
         ai_message = Message(role="assistant", message="...")
         self._message_history.add_message(ai_message)
         return full_prompt
